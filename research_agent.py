@@ -346,7 +346,6 @@ def compose_dossier_narrative(row, news_items, short_float, moat_rating, earning
     fcf_y = (row.get('owner_fcf_yield') or 0) * 100
     mos = (row.get('fair_value_mos') or 0) * 100
     pio = row.get('piotroski')
-    val_tone, val_text = _valuation_phrase(row)
 
     bear_narrative = []
     bull_thesis = []
@@ -396,10 +395,21 @@ def compose_dossier_narrative(row, news_items, short_float, moat_rating, earning
             f"Thin {fcf_y:.1f}% Owner FCF yield after stock-based compensation: the price is about "
             f"{100/fcf_y:.0f}x owner cash flow, leaving little valuation cushion."
         )
-    if val_tone == 'pos' and mos > 5:
-        bull_thesis.append(val_text)
-    elif val_tone == 'neg' and (mos <= -10 or (row.get('fair_value') or 0) <= 0):
-        bear_narrative.append(val_text)
+
+    # Reverse DCF Expectations Gap (Mauboussin: replacing speculative target price guessing)
+    imp_g = row.get('implied_growth')
+    rev_c = row.get('rev_cagr')
+    if imp_g is not None and rev_c is not None:
+        if imp_g <= 0 and rev_c >= 0.04:
+            bull_thesis.append(
+                f"Reverse DCF Expectation Gap: Today's price assumes a {imp_g*100:+.1f}%/yr permanent cash contraction, "
+                f"while 3Y revenue has compounded at {rev_c*100:+.1f}%/yr."
+            )
+        elif imp_g >= 0.15 and (rev_c < imp_g - 0.04):
+            bear_narrative.append(
+                f"Demanding Growth Expectations: Today's price requires {imp_g*100:.1f}%/yr FCF compounding for 10 years "
+                f"(historical 3Y revenue growth was {rev_c*100:.1f}%/yr)."
+            )
 
     eps_chg = row.get('eps_expected_change')
     if eps_chg is not None and eps_chg < -0.15:
@@ -485,11 +495,10 @@ def compose_dossier_narrative(row, news_items, short_float, moat_rating, earning
     elif score < 60.0:
         verdict = f"WATCHLIST / HOLD — SCORE {score:.1f}/100 (BELOW 60.0 BUY THRESHOLD)"
         verdict_color = "b-slate"
-        val_bit = f" {val_text}" if val_text else ''
         action_plan = (
-            f"Financially solvent with zero hard red flags, but the {fcf_y:.1f}% Owner FCF yield and current price "
-            f"do not offer enough discount for basket inclusion.{val_bit}"
-            + (f" Monitor for a pullback toward fair value (${fv:.2f})." if fv > 0 else '')
+            f"Financially solvent with zero hard red flags, but the {fcf_y:.1f}% Owner FCF yield "
+            f"does not provide sufficient cash return for Top Basket inclusion. "
+            f"Keep on watchlist and monitor for better cash yields or expanding ROIC."
         )
     elif days_to_earnings is not None and 0 <= days_to_earnings <= 7:
         verdict = f"WAIT FOR EARNINGS ({earnings_date} — IN {days_to_earnings} DAYS)"
