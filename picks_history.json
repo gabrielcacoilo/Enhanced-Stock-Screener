@@ -1,0 +1,326 @@
+{
+  "cohorts": [
+    {
+      "date": "2026-10-27",
+      "spy_entry": 769.41,
+      "picks": [
+        {
+          "ticker": "DECK",
+          "company": "Deckers Outdoor Corporation",
+          "sector": "Consumer Cyclical",
+          "entry_price": 79.55,
+          "composite_score": 88.8,
+          "fair_value": 177.23
+        },
+        {
+          "ticker": "PYPL",
+          "company": "PayPal Holdings, Inc.",
+          "sector": "Financial Services",
+          "entry_price": 55.92,
+          "composite_score": 88.8,
+          "fair_value": 92.42
+        },
+        {
+          "ticker": "ADBE",
+          "company": "Adobe Inc.",
+          "sector": "Technology",
+          "entry_price": 250.55,
+          "composite_score": 87.9,
+          "fair_value": 400.4
+        },
+        {
+          "ticker": "INTU",
+          "company": "Intuit Inc.",
+          "sector": "Technology",
+          "entry_price": 327.27,
+          "composite_score": 78.9,
+          "fair_value": 353.58
+        },
+        {
+          "ticker": "BKNG",
+          "company": "Booking Holdings Inc. Common St",
+          "sector": "Consumer Cyclical",
+          "entry_price": 151.47,
+          "composite_score": 78.6,
+          "fair_value": 232.05
+        },
+        {
+          "ticker": "APTV",
+          "company": "Aptiv PLC",
+          "sector": "Consumer Cyclical",
+          "entry_price": 43.91,
+          "composite_score": 74.6,
+          "fair_value": 80.51
+        },
+        {
+          "ticker": "LDOS",
+          "company": "Leidos Holdings, Inc.",
+          "sector": "Technology",
+          "entry_price": 139.13,
+          "composite_score": 73.3,
+          "fair_value": 176.03
+        },
+        {
+          "ticker": "AOS",
+          "company": "A.O. Smith Corporation",
+          "sector": "Industrials",
+          "entry_price": 61.73,
+          "composite_score": 73.2,
+          "fair_value": 70.15
+        },
+        {
+          "ticker": "ZTS",
+          "company": "Zoetis Inc.",
+          "sector": "Healthcare",
+          "entry_price": 78.31,
+          "composite_score": 72.5,
+          "fair_value": 72.85
+        },
+        {
+          "ticker": "WRB",
+          "company": "W.R. Berkley Corporation",
+          "sector": "Financial Services",
+          "entry_price": 72.1,
+          "composite_score": 72.3,
+          "fair_value": 238.19
+        },
+        {
+          "ticker": "CB",
+          "company": "Chubb Limited",
+          "sector": "Financial Services",
+          "entry_price": 354.54,
+          "composite_score": 71.5,
+          "fair_value": 741.61
+        },
+        {
+          "ticker": "FOX",
+          "company": "Fox Corporation",
+          "sector": "Communication Services",
+          "entry_price": 57.24,
+          "composite_score": 69.5,
+          "fair_value": 84.62
+        },
+        {
+          "ticker": "COR",
+          "company": "Cencora, Inc.",
+          "sector": "Healthcare",
+          "entry_price": 327.6,
+          "composite_score": 67.8,
+          "fair_value": 297.76
+        },
+        {
+          "ticker": "RMD",
+          "company": "ResMed Inc.",
+          "sector": "Healthcare",
+          "entry_price": 249.93,
+          "composite_score": 66.2,
+          "fair_value": 216.15
+        },
+        {
+          "ticker": "VRSK",
+          "company": "Verisk Analytics, Inc.",
+          "sector": "Industrials",
+          "entry_price": 188.17,
+          "composite_score": 60.5,
+          "fair_value": 133.5
+        }
+      ]
+    },
+    {
+      "date": "2026-10-28",
+      "spy_entry": 771.5,
+      "picks": [
+        {
+          "ticker": "DECK",
+          "company": "Deckers Outdoor Corporation",
+          "sector": "Consumer Cyclical",
+          "entry_price": 80.25,
+          "composite_score": 88.8,
+          "fair_value": 177.23
+        },
+        {
+          "ticker": "WRB",
+          "company": "W.R. Berkley Corporation",
+          "sector": "Financial Services",
+          "entry_price": 72.2,
+          "composite_score": 76.8,
+          "fair_value": 238.19
+        },
+        {
+          "ticker": "APTV",
+          "company": "Aptiv PLC",
+          "sector": "Consumer Cyclical",
+          "entry_price": 43.92,
+          "composite_score": 74.6,
+          "fair_value": 80.51
+        },
+        {
+          "ticker": "AOS",
+          "company": "A.O. Smith Corporation",
+          "sector": "Industrials",
+          "entry_price": 61.23,
+          "composite_score": 73.5,
+          "fair_value": 70.15
+        },
+        {
+          "ticker": "LDOS",
+          "company": "Leidos Holdings, Inc.",
+          "sector": "Technology",
+          "entry_price": 139.31,
+          "composite_score": 73.2,
+          "fair_value": 176.03
+        },
+        {
+          "ticker": "IT",
+          "company": "Gartner, Inc.",
+          "sector": "Technology",
+          "entry_price": 220.16,
+          "composite_score": 67.1,
+          "fair_value": 249.76
+        },
+        {
+          "ticker": "ACN",
+          "company": "Accenture plc",
+          "sector": "Technology",
+          "entry_price": 245.16,
+          "composite_score": 66.3,
+          "fair_value": 257.4
+        },
+        {
+          "ticker": "RMD",
+          "company": "ResMed Inc.",
+          "sector": "Healthcare",
+          "entry_price": 251.29,
+          "composite_score": 65.1,
+          "fair_value": 216.15
+        },
+        {
+          "ticker": "COR",
+          "company": "Cencora, Inc.",
+          "sector": "Healthcare",
+          "entry_price": 326.17,
+          "composite_score": 63.8,
+          "fair_value": 297.76
+        },
+        {
+          "ticker": "SPGI",
+          "company": "S&P Global Inc.",
+          "sector": "Financial Services",
+          "entry_price": 448.86,
+          "composite_score": 63.6,
+          "fair_value": 320.65
+        },
+        {
+          "ticker": "UHS",
+          "company": "Universal Health Services, Inc.",
+          "sector": "Healthcare",
+          "entry_price": 177.01,
+          "composite_score": 61.6,
+          "fair_value": 168.11
+        }
+      ]
+    },
+    {
+      "date": "2026-10-29",
+      "spy_entry": 768.91,
+      "picks": [
+        {
+          "ticker": "DECK",
+          "company": "Deckers Outdoor Corporation",
+          "sector": "Consumer Cyclical",
+          "entry_price": 82.95,
+          "composite_score": 92.0,
+          "fair_value": 178.84
+        },
+        {
+          "ticker": "AOS",
+          "company": "A.O. Smith Corporation",
+          "sector": "Industrials",
+          "entry_price": 61.8,
+          "composite_score": 80.4,
+          "fair_value": 75.93
+        },
+        {
+          "ticker": "IT",
+          "company": "Gartner, Inc.",
+          "sector": "Technology",
+          "entry_price": 217.87,
+          "composite_score": 79.6,
+          "fair_value": 259.5
+        },
+        {
+          "ticker": "MAS",
+          "company": "Masco Corporation",
+          "sector": "Industrials",
+          "entry_price": 79.19,
+          "composite_score": 74.1,
+          "fair_value": 49.33
+        },
+        {
+          "ticker": "MO",
+          "company": "Altria Group, Inc.",
+          "sector": "Consumer Defensive",
+          "entry_price": 75.56,
+          "composite_score": 70.6,
+          "fair_value": 73.94
+        },
+        {
+          "ticker": "ACN",
+          "company": "Accenture plc",
+          "sector": "Technology",
+          "entry_price": 245.55,
+          "composite_score": 68.4,
+          "fair_value": 262.46
+        },
+        {
+          "ticker": "WRB",
+          "company": "W.R. Berkley Corporation",
+          "sector": "Financial Services",
+          "entry_price": 72.42,
+          "composite_score": 68.3,
+          "fair_value": 163.52
+        },
+        {
+          "ticker": "PAYX",
+          "company": "Paychex, Inc.",
+          "sector": "Technology",
+          "entry_price": 108.81,
+          "composite_score": 68.3,
+          "fair_value": 106.97
+        },
+        {
+          "ticker": "RMD",
+          "company": "ResMed Inc.",
+          "sector": "Healthcare",
+          "entry_price": 251.91,
+          "composite_score": 67.3,
+          "fair_value": 207.65
+        },
+        {
+          "ticker": "ZTS",
+          "company": "Zoetis Inc.",
+          "sector": "Healthcare",
+          "entry_price": 78.2,
+          "composite_score": 65.3,
+          "fair_value": 77.6
+        },
+        {
+          "ticker": "VRSK",
+          "company": "Verisk Analytics, Inc.",
+          "sector": "Industrials",
+          "entry_price": 190.14,
+          "composite_score": 63.6,
+          "fair_value": 135.08
+        },
+        {
+          "ticker": "FDS",
+          "company": "FactSet Research Systems Inc.",
+          "sector": "Financial Services",
+          "entry_price": 317.38,
+          "composite_score": 62.7,
+          "fair_value": 300.13
+        }
+      ]
+    }
+  ]
+}

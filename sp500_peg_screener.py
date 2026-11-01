@@ -55,9 +55,27 @@ from portfolio_tracker import record_and_evaluate
 from dashboard_builder import build_html_dashboard
 from research_agent import enrich_top_stocks_with_research, enrich_single_stock_with_research
 
-OUTPUT_DIR = r"C:\Users\Gabriel\Desktop\Trading\--INVESTMENTS--"
+OUTPUT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_CSV = os.path.join(OUTPUT_DIR, "sp500_tierlist.csv")
 OUTPUT_HTML = os.path.join(OUTPUT_DIR, "sp500_tierlist_dashboard.html")
+
+def get_yf_session():
+    """
+    Returns a session with Chrome browser TLS impersonation (via curl_cffi) or
+    realistic User-Agent headers to avoid cloud IP blocking on Yahoo Finance.
+    """
+    try:
+        from curl_cffi import requests as c_requests
+        return c_requests.Session(impersonate="chrome")
+    except Exception:
+        import requests
+        s = requests.Session()
+        s.headers.update({
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+        })
+        return s
 
 BASKET_MAX_STOCKS = 15
 BASKET_MAX_PER_SECTOR = 3
@@ -303,9 +321,44 @@ def compute_scores(m, red_flags, warnings, insider):
 
 def analyze_single_ticker(symbol, force_full=False):
     try:
-        t = yf.Ticker(symbol)
-        info = t.info or {}
-        if not info or info.get('quoteType') == 'NONE' or (not info.get('regularMarketPrice') and not info.get('currentPrice') and not info.get('previousClose')):
+        session = get_yf_session()
+        t = yf.Ticker(symbol, session=session)
+
+        info = {}
+        try:
+            info = t.info or {}
+        except Exception:
+            info = {}
+
+        price = info.get('currentPrice') or info.get('regularMarketPrice') or info.get('previousClose')
+
+        # Fallback to fast_info and history if info was rate-limited or blocked by cloud anti-bot
+        if not price or info.get('quoteType') == 'NONE':
+            try:
+                fi = t.fast_info
+                px = getattr(fi, 'last_price', None) or getattr(fi, 'previous_close', None)
+                if px:
+                    price = float(px)
+                    info['currentPrice'] = price
+                    info['regularMarketPrice'] = price
+                    info['previousClose'] = getattr(fi, 'previous_close', price)
+                    info['marketCap'] = getattr(fi, 'market_cap', None)
+                    info['currency'] = getattr(fi, 'currency', 'USD')
+            except Exception:
+                pass
+
+        if not price:
+            try:
+                hist = t.history(period='5d')
+                if not hist.empty:
+                    price = float(hist['Close'].iloc[-1])
+                    info['currentPrice'] = price
+                    info['regularMarketPrice'] = price
+            except Exception:
+                pass
+
+        if not price:
+            print(f"[!] Warning: No price data available from Yahoo Finance for {symbol}", flush=True)
             return None
 
         name = info.get('shortName') or info.get('longName') or symbol
@@ -443,7 +496,8 @@ def analyze_single_ticker(symbol, force_full=False):
             'due_diligence': dd_questions,
             'trends': fund['trends'],
         }
-    except Exception:
+    except Exception as exc:
+        print(f"[!] Exception analyzing ticker {symbol}: {exc}", flush=True)
         return None
 
 
