@@ -289,8 +289,10 @@ class TerminalRequestHandler(BaseHTTPRequestHandler):
 
                 stock = sp500_peg_screener.audit_single_ticker_live(ticker)
                 if not stock:
+                    err = getattr(sp500_peg_screener, 'get_last_ticker_error', lambda x: None)(ticker)
+                    err_msg = f"Audit failed for {ticker}: {err}" if err else f"Ticker '{ticker}' was not found on Yahoo Finance or has no market data."
                     self._send_json(
-                        {"ok": False, "error": f"Ticker '{ticker}' was not found on Yahoo Finance or has no market data."},
+                        {"ok": False, "error": err_msg},
                         status=404,
                     )
                     return

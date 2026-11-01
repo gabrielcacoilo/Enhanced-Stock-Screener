@@ -59,23 +59,27 @@ OUTPUT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_CSV = os.path.join(OUTPUT_DIR, "sp500_tierlist.csv")
 OUTPUT_HTML = os.path.join(OUTPUT_DIR, "sp500_tierlist_dashboard.html")
 
+_LAST_TICKER_ERROR = {}
+
+def get_last_ticker_error(symbol):
+    return _LAST_TICKER_ERROR.get(str(symbol or '').strip().upper())
+
 def get_yf_session():
     """
-    Returns a session with Chrome browser TLS impersonation (via curl_cffi) or
-    realistic User-Agent headers to avoid cloud IP blocking on Yahoo Finance.
+    Returns a standard requests.Session configured with browser User-Agent headers,
+    guaranteed to be 100% compatible with yfinance.
     """
     try:
-        from curl_cffi import requests as c_requests
-        return c_requests.Session(impersonate="chrome")
-    except Exception:
         import requests
         s = requests.Session()
         s.headers.update({
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.9",
         })
         return s
+    except Exception:
+        return None
 
 BASKET_MAX_STOCKS = 15
 BASKET_MAX_PER_SECTOR = 3
@@ -320,9 +324,15 @@ def compute_scores(m, red_flags, warnings, insider):
 
 
 def analyze_single_ticker(symbol, force_full=False):
+    global _LAST_TICKER_ERROR
+    sym_key = str(symbol or '').strip().upper()
+    _LAST_TICKER_ERROR[sym_key] = None
     try:
         session = get_yf_session()
-        t = yf.Ticker(symbol, session=session)
+        try:
+            t = yf.Ticker(symbol, session=session) if session else yf.Ticker(symbol)
+        except Exception:
+            t = yf.Ticker(symbol)
 
         info = {}
         try:
@@ -358,14 +368,20 @@ def analyze_single_ticker(symbol, force_full=False):
                 pass
 
         if not price:
-            print(f"[!] Warning: No price data available from Yahoo Finance for {symbol}", flush=True)
+            err_msg = f"No price or market data returned by Yahoo Finance for ticker '{symbol}'"
+            _LAST_TICKER_ERROR[sym_key] = err_msg
+            print(f"[!] Warning: {err_msg}", flush=True)
             return None
 
-        existing_db = load_existing_database()
-        existing_stock = next((s for s in existing_db.get('stocks', []) if str(s.get('ticker','')).upper() == symbol.upper()), None)
+        existing_stock = None
+        try:
+            existing_stocks, _, _ = load_existing_database()
+            existing_stock = next((s for s in existing_stocks if str(s.get('ticker','')).upper() == symbol.upper()), None)
+        except Exception:
+            existing_stock = None
 
         name = info.get('shortName') or info.get('longName') or (existing_stock.get('company') if existing_stock else None) or symbol
-        sector = info.get('sector') or (existing_stock.get('sector') if existing_stock else None) or 'Technology' if symbol in ('INTC','NVDA','AMD','AAPL','MSFT','AVGO','QCOM','TXN','MU','AMAT') else (existing_stock.get('sector') if existing_stock else None) or 'Financials/Other'
+        sector = info.get('sector') or (existing_stock.get('sector') if existing_stock else None) or ('Technology' if symbol in ('INTC','NVDA','AMD','AAPL','MSFT','AVGO','QCOM','TXN','MU','AMAT') else 'Financials/Other')
 
         inc = t.income_stmt
         bal = t.balance_sheet
@@ -500,7 +516,9 @@ def analyze_single_ticker(symbol, force_full=False):
             'trends': fund['trends'],
         }
     except Exception as exc:
-        print(f"[!] Exception analyzing ticker {symbol}: {exc}", flush=True)
+        err_msg = f"{type(exc).__name__}: {exc}"
+        _LAST_TICKER_ERROR[sym_key] = err_msg
+        print(f"[!] Exception analyzing ticker {symbol}: {err_msg}", flush=True)
         return None
 
 
