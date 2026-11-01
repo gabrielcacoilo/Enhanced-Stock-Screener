@@ -361,8 +361,11 @@ def analyze_single_ticker(symbol, force_full=False):
             print(f"[!] Warning: No price data available from Yahoo Finance for {symbol}", flush=True)
             return None
 
-        name = info.get('shortName') or info.get('longName') or symbol
-        sector = info.get('sector') or 'Financials/Other'
+        existing_db = load_existing_database()
+        existing_stock = next((s for s in existing_db.get('stocks', []) if str(s.get('ticker','')).upper() == symbol.upper()), None)
+
+        name = info.get('shortName') or info.get('longName') or (existing_stock.get('company') if existing_stock else None) or symbol
+        sector = info.get('sector') or (existing_stock.get('sector') if existing_stock else None) or 'Technology' if symbol in ('INTC','NVDA','AMD','AAPL','MSFT','AVGO','QCOM','TXN','MU','AMAT') else (existing_stock.get('sector') if existing_stock else None) or 'Financials/Other'
 
         inc = t.income_stmt
         bal = t.balance_sheet

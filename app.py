@@ -300,6 +300,11 @@ class TerminalRequestHandler(BaseHTTPRequestHandler):
                 updated = False
                 for i, existing in enumerate(stocks_list):
                     if existing.get("ticker", "").upper() == stock["ticker"].upper():
+                        # Preserve existing valid company name and sector if Yahoo omitted them
+                        if stock.get("company") in (stock["ticker"], "", None) and existing.get("company"):
+                            stock["company"] = existing["company"]
+                        if stock.get("sector") in ("Financials/Other", "", None) and existing.get("sector"):
+                            stock["sector"] = existing["sector"]
                         stocks_list[i] = stock
                         updated = True
                         break
