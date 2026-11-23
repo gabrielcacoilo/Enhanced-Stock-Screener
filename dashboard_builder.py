@@ -12,7 +12,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>DaTracker — Quantitative Valuation & Forensic Terminal</title>
+  <title>DaTracker</title>
   <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,__ICON_ICO_B64__">
   <link rel="apple-touch-icon" href="data:image/png;base64,__LOGO_PNG_B64__">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -406,6 +406,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       padding: 8px 14px;
       border-radius: 8px;
       cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       transition: all 0.15s ease;
     }
     .btn-secondary:hover {
@@ -423,6 +428,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       padding: 8px 16px;
       border-radius: 8px;
       cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -1303,6 +1310,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       padding: 7px 14px;
       border-radius: 7px;
       cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
       transition: all 0.12s;
     }
     .close-btn:hover {
@@ -4067,27 +4076,27 @@ function openModal(ticker) {
     : (isLeading ? '<span class="sector-tag tag-leading" style="margin-left:8px;vertical-align:middle;font-size:11px;">Sector Leading (Relative Strength)</span>' : '');
 
   document.getElementById('modal-content').innerHTML = `
-    <div class="modal-top">
-      <div>
+    <div class="modal-top" style="flex-direction:column;gap:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;width:100%;gap:16px;flex-wrap:wrap;">
         <div>
           <span class="modal-ticker">${s.ticker}</span>
           <span class="modal-company">${s.company} · ${s.sector}${secRegimeBadge}</span>
         </div>
-        <div class="modal-pillars">
-          <span>Composite: <strong class="${pCompCls}">${s.composite_score.toFixed(1)} / 100</strong></span>
-          <span>Valuation: <strong class="${pValCls}">${s.val_score.toFixed(1)} / 30</strong></span>
-          <span>Quality: <strong class="${pQualCls}">${s.qual_score.toFixed(1)} / 30</strong></span>
-          <span>Safety: <strong class="${pSafeCls}">${s.safe_score.toFixed(1)} / 20</strong></span>
-          <span>Alignment: <strong class="${pAlnCls}">${s.align_score.toFixed(1)} / 20</strong></span>
-          <span>Last Audited: <strong class="c-prime">${s.last_analyzed || (scanMeta.last_full_scan && scanMeta.last_full_scan.timestamp ? scanMeta.last_full_scan.timestamp : 'Baseline DB')}</strong></span>
+        <div style="display:flex;flex-direction:row;gap:8px;align-items:center;flex-shrink:0;flex-wrap:nowrap;">
+          <button class="btn-secondary" onclick="togglePinTicker('${s.ticker}', event)" style="white-space:nowrap;${isPinned ? 'border-color:#fbbf24;color:#fbbf24;' : ''}">${isPinned ? '&#9733; Pinned' : '&#9734; Pin Stock'}</button>
+          <button class="btn-secondary" onclick="auditSingleTicker('${s.ticker}')" style="white-space:nowrap;">Live Re-Audit</button>
+          <button class="close-btn" onclick="closeModal()" style="white-space:nowrap;">Close [ESC]</button>
         </div>
-        ${modalSectorBenchRow}
       </div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn-secondary" onclick="togglePinTicker('${s.ticker}', event)" style="${isPinned ? 'border-color:#fbbf24;color:#fbbf24;' : ''}">${isPinned ? '&#9733; Pinned' : '&#9734; Pin Stock'}</button>
-        <button class="btn-secondary" onclick="auditSingleTicker('${s.ticker}')">Live Re-Audit</button>
-        <button class="close-btn" onclick="closeModal()">Close [ESC]</button>
+      <div class="modal-pillars" style="margin-top:2px;">
+        <span>Composite: <strong class="${pCompCls}">${s.composite_score.toFixed(1)} / 100</strong></span>
+        <span>Valuation: <strong class="${pValCls}">${s.val_score.toFixed(1)} / 30</strong></span>
+        <span>Quality: <strong class="${pQualCls}">${s.qual_score.toFixed(1)} / 30</strong></span>
+        <span>Safety: <strong class="${pSafeCls}">${s.safe_score.toFixed(1)} / 20</strong></span>
+        <span>Alignment: <strong class="${pAlnCls}">${s.align_score.toFixed(1)} / 20</strong></span>
+        <span>Last Audited: <strong class="c-prime">${s.last_analyzed || (scanMeta.last_full_scan && scanMeta.last_full_scan.timestamp ? scanMeta.last_full_scan.timestamp : 'Baseline DB')}</strong></span>
       </div>
+      ${modalSectorBenchRow}
     </div>
 
     ${researchHTML}
