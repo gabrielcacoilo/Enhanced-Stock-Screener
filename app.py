@@ -1,5 +1,5 @@
 """
-S&P 500 Quantitative Valuation & Forensic Terminal — Local Desktop & Web Server App
+DaTracker — Quantitative Valuation & Forensic Terminal (Local Desktop & Web Server)
 ===================================================================================
 Launches the interactive workstation in a dedicated frameless desktop app window
 (via Microsoft Edge / Google Chrome --app mode) and powers the in-app "Run Screener"
@@ -44,7 +44,7 @@ def load_payload_from_html():
     if LATEST_PAYLOAD is not None:
         return LATEST_PAYLOAD
     if not os.path.exists(HTML_PATH):
-        return {"stocks": [], "cohorts": [], "watchlists": []}
+        return {"stocks": [], "cohorts": [], "watchlists": [], "scan_meta": {}}
     try:
         with open(HTML_PATH, "r", encoding="utf-8") as f:
             for line in f:
@@ -53,10 +53,16 @@ def load_payload_from_html():
                     LATEST_PAYLOAD = json.loads(raw)
                     if "watchlists" not in LATEST_PAYLOAD:
                         LATEST_PAYLOAD["watchlists"] = []
+                    if not isinstance(LATEST_PAYLOAD.get("scan_meta"), dict) or not LATEST_PAYLOAD["scan_meta"].get("last_full_scan"):
+                        try:
+                            import sp500_peg_screener
+                            LATEST_PAYLOAD["scan_meta"] = sp500_peg_screener.load_existing_scan_meta()
+                        except Exception:
+                            LATEST_PAYLOAD["scan_meta"] = LATEST_PAYLOAD.get("scan_meta") or {}
                     return LATEST_PAYLOAD
     except Exception:
         pass
-    return {"stocks": [], "cohorts": [], "watchlists": []}
+    return {"stocks": [], "cohorts": [], "watchlists": [], "scan_meta": {}}
 
 
 def _on_scan_progress(info):
@@ -94,7 +100,7 @@ def _on_scan_progress(info):
                 SCAN_STATE["recent_logs"] = SCAN_STATE["recent_logs"][-40:]
 
 
-def _run_scan_worker(max_stocks=None, mode="full_universe", custom_tickers=None):
+def _run_scan_worker(max_stocks=None, mode="full_universe", custom_tickers=None, watchlist_name=None):
     global LATEST_PAYLOAD
     try:
         import importlib
@@ -110,6 +116,7 @@ def _run_scan_worker(max_stocks=None, mode="full_universe", custom_tickers=None)
             progress_callback=_on_scan_progress,
             mode=mode,
             custom_tickers=custom_tickers,
+            watchlist_name=watchlist_name,
         )
         if payload:
             LATEST_PAYLOAD = payload
@@ -160,6 +167,26 @@ class TerminalRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(body)
             return
 
+        if path in ("/favicon.ico", "/logo.png"):
+            try:
+                import base64
+                import dashboard_builder
+                if path == "/favicon.ico":
+                    raw_bytes = base64.b64decode(dashboard_builder.ICON_ICO_B64)
+                    ctype = "image/x-icon"
+                else:
+                    raw_bytes = base64.b64decode(dashboard_builder.LOGO_PNG_B64)
+                    ctype = "image/png"
+                self.send_response(200)
+                self.send_header("Content-Type", ctype)
+                self.send_header("Content-Length", str(len(raw_bytes)))
+                self.send_header("Cache-Control", "public, max-age=86400")
+                self.end_headers()
+                self.wfile.write(raw_bytes)
+                return
+            except Exception:
+                pass
+
         if path == "/api/scan/status":
             with SCAN_LOCK:
                 if SCAN_STATE["running"] and SCAN_STATE["start_time"] > 0:
@@ -188,6 +215,7 @@ class TerminalRequestHandler(BaseHTTPRequestHandler):
                 req = {}
             max_stocks = req.get("max_stocks", None)
             mode = req.get("mode", "full_universe")
+            watchlist_name = str(req.get("sector_name") or req.get("watchlist_name") or "").strip() or None
             custom_tickers = req.get("custom_tickers", None)
             if isinstance(custom_tickers, list):
                 custom_tickers = [str(t).strip().upper() for t in custom_tickers if str(t).strip()]
@@ -217,7 +245,7 @@ class TerminalRequestHandler(BaseHTTPRequestHandler):
 
             t = threading.Thread(
                 target=_run_scan_worker,
-                args=(max_stocks, mode, custom_tickers),
+                args=(max_stocks, mode, custom_tickers, watchlist_name),
                 daemon=True,
             )
             t.start()
@@ -246,7 +274,12 @@ class TerminalRequestHandler(BaseHTTPRequestHandler):
                         if ts and ts not in seen_t:
                             seen_t.add(ts)
                             wtickers.append(ts)
-                    clean_wls.append({"id": wid, "name": wname, "tickers": wtickers})
+                    wl_obj = {"id": wid, "name": wname, "tickers": wtickers}
+                    if wl.get("last_analyzed"):
+                        wl_obj["last_analyzed"] = wl.get("last_analyzed")
+                    if wl.get("last_analyzed_epoch"):
+                        wl_obj["last_analyzed_epoch"] = wl.get("last_analyzed_epoch")
+                    clean_wls.append(wl_obj)
 
             payload = load_payload_from_html()
             payload["watchlists"] = clean_wls
@@ -257,6 +290,7 @@ class TerminalRequestHandler(BaseHTTPRequestHandler):
                     payload.get("stocks", []),
                     payload.get("cohorts", []),
                     clean_wls,
+                    payload.get("scan_meta"),
                 )
             except Exception as exc:
                 self._send_json({"ok": False, "error": str(exc)}, status=500)
@@ -297,6 +331,11 @@ class TerminalRequestHandler(BaseHTTPRequestHandler):
                     )
                     return
 
+                now_epoch = int(time.time())
+                now_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now_epoch))
+                stock["last_analyzed"] = stock.get("last_analyzed") or now_str
+                stock["last_analyzed_epoch"] = stock.get("last_analyzed_epoch") or now_epoch
+
                 payload = load_payload_from_html()
                 stocks_list = payload.get("stocks", [])
                 updated = False
@@ -316,12 +355,34 @@ class TerminalRequestHandler(BaseHTTPRequestHandler):
                 sp500_peg_screener.assign_tiers_and_basket(stocks_list)
                 stocks_list.sort(key=lambda x: (x.get("in_basket", False), x.get("composite_score", 0)), reverse=True)
                 payload["stocks"] = stocks_list
+
+                scan_meta = payload.get("scan_meta")
+                if not isinstance(scan_meta, dict):
+                    scan_meta = sp500_peg_screener.load_existing_scan_meta()
+                single_entry = {
+                    "timestamp": stock["last_analyzed"],
+                    "epoch": stock["last_analyzed_epoch"],
+                    "ticker": stock["ticker"],
+                    "company": stock.get("company", stock["ticker"]),
+                    "tier": stock.get("tier", ""),
+                    "score": round(float(stock.get("composite_score") or 0), 1),
+                }
+                scan_meta["last_single_scan"] = single_entry
+                recent_singles = [
+                    x for x in (scan_meta.get("recent_single_scans") or [])
+                    if isinstance(x, dict) and x.get("ticker") != stock["ticker"]
+                ]
+                recent_singles.insert(0, single_entry)
+                scan_meta["recent_single_scans"] = recent_singles[:12]
+                payload["scan_meta"] = scan_meta
+
                 LATEST_PAYLOAD = payload
                 try:
                     sp500_peg_screener.save_database_to_disk(
                         stocks_list,
                         payload.get("cohorts", []),
                         payload.get("watchlists", []),
+                        scan_meta,
                     )
                 except Exception:
                     pass
@@ -333,7 +394,13 @@ class TerminalRequestHandler(BaseHTTPRequestHandler):
                     f"Verdict: {(stock.get('research') or {}).get('verdict', 'N/A')}",
                     flush=True,
                 )
-                self._send_json({"ok": True, "stock": stock, "stocks": stocks_list, "watchlists": payload.get("watchlists", [])})
+                self._send_json({
+                    "ok": True,
+                    "stock": stock,
+                    "stocks": stocks_list,
+                    "watchlists": payload.get("watchlists", []),
+                    "scan_meta": scan_meta,
+                })
             except Exception as exc:
                 self._send_json({"ok": False, "error": str(exc)}, status=500)
             return
@@ -375,7 +442,7 @@ def launch_desktop_window(url):
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description="S&P 500 Forensic Terminal Web & Desktop Server")
+    parser = argparse.ArgumentParser(description="DaTracker — Quantitative Valuation & Forensic Terminal Server")
     parser.add_argument("--host", default=None, help="Host address to bind to (e.g. 0.0.0.0 or 127.0.0.1)")
     parser.add_argument("--port", type=int, default=None, help="Port to listen on (default: $PORT or 8765)")
     parser.add_argument("--no-browser", action="store_true", help="Do not launch desktop window on startup")
@@ -406,7 +473,7 @@ def main():
     server = ThreadingHTTPServer((host, port), TerminalRequestHandler)
 
     print("=" * 76)
-    print(" S&P 500 QUANTITATIVE VALUATION & FORENSIC TERMINAL (APP SERVER)")
+    print(" DATRACKER — QUANTITATIVE VALUATION & FORENSIC TERMINAL (APP SERVER)")
     print("=" * 76)
     print(f" Environment   : {'Cloud Web Service' if is_cloud else 'Local Desktop Workstation'}")
     print(f" Listening On  : http://{host}:{port}")

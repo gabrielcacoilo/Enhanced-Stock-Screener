@@ -15,6 +15,8 @@ import json
 import os
 import sys
 import subprocess
+import time
+from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
@@ -80,6 +82,72 @@ def get_yf_session():
         return s
     except Exception:
         return None
+
+KNOWN_TICKER_PROFILES = {
+    'CROX': ('Crocs, Inc.', 'Consumer Cyclical'),
+    'CELH': ('Celsius Holdings, Inc.', 'Consumer Defensive'),
+    'PLTR': ('Palantir Technologies Inc.', 'Technology'),
+    'RDDT': ('Reddit, Inc.', 'Communication Services'),
+    'SPOT': ('Spotify Technology S.A.', 'Communication Services'),
+    'ARM': ('Arm Holdings plc', 'Technology'),
+    'HOOD': ('Robinhood Markets, Inc.', 'Financials'),
+    'COIN': ('Coinbase Global, Inc.', 'Financials'),
+    'SOFI': ('SoFi Technologies, Inc.', 'Financials'),
+    'INTC': ('Intel Corporation', 'Technology'),
+    'NVDA': ('NVIDIA Corporation', 'Technology'),
+    'AMD': ('Advanced Micro Devices, Inc.', 'Technology'),
+    'AAPL': ('Apple Inc.', 'Technology'),
+    'MSFT': ('Microsoft Corporation', 'Technology'),
+    'GOOGL': ('Alphabet Inc.', 'Communication Services'),
+    'GOOG': ('Alphabet Inc.', 'Communication Services'),
+    'META': ('Meta Platforms, Inc.', 'Communication Services'),
+    'AMZN': ('Amazon.com, Inc.', 'Consumer Cyclical'),
+    'TSLA': ('Tesla, Inc.', 'Consumer Cyclical'),
+    'DECK': ('Deckers Outdoor Corporation', 'Consumer Cyclical'),
+    'NKE': ('NIKE, Inc.', 'Consumer Cyclical'),
+    'LULU': ('Lululemon Athletica Inc.', 'Consumer Cyclical'),
+}
+
+def fetch_ticker_profile_fallback(symbol):
+    """
+    Attempts to retrieve company name and sector via static registry, database,
+    or Yahoo Finance search API if profile quoteSummary is rate-limited on cloud hosts.
+    """
+    sym = str(symbol or '').strip().upper()
+    if sym in KNOWN_TICKER_PROFILES:
+        return KNOWN_TICKER_PROFILES[sym]
+
+    try:
+        import requests
+        url = f"https://query2.finance.yahoo.com/v1/finance/search?q={sym}&quotesCount=3&newsCount=0"
+        resp = requests.get(url, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "Accept": "application/json",
+        }, timeout=3)
+        if resp.status_code == 200:
+            data = resp.json()
+            quotes = data.get('quotes', [])
+            for q in quotes:
+                if str(q.get('symbol', '')).upper() == sym:
+                    name = q.get('longname') or q.get('shortname')
+                    sec = q.get('sector') or q.get('sectorDisp')
+                    if not sec and q.get('industry'):
+                        ind = q.get('industry', '').lower()
+                        if any(w in ind for w in ('footwear', 'apparel', 'retail', 'auto', 'leisure', 'restaurant', 'consumer')):
+                            sec = 'Consumer Cyclical'
+                        elif any(w in ind for w in ('beverage', 'food', 'tobacco', 'household')):
+                            sec = 'Consumer Defensive'
+                        elif any(w in ind for w in ('software', 'semiconductor', 'hardware', 'tech')):
+                            sec = 'Technology'
+                        elif any(w in ind for w in ('bank', 'insurance', 'financial', 'credit')):
+                            sec = 'Financials'
+                        elif any(w in ind for w in ('drug', 'health', 'biotech', 'medical')):
+                            sec = 'Healthcare'
+                    if name or sec:
+                        return name, sec
+    except Exception:
+        pass
+    return None, None
 
 BASKET_MAX_STOCKS = 15
 BASKET_MAX_PER_SECTOR = 3
@@ -380,8 +448,20 @@ def analyze_single_ticker(symbol, force_full=False):
         except Exception:
             existing_stock = None
 
-        name = info.get('shortName') or info.get('longName') or (existing_stock.get('company') if existing_stock else None) or symbol
-        sector = info.get('sector') or (existing_stock.get('sector') if existing_stock else None) or ('Technology' if symbol in ('INTC','NVDA','AMD','AAPL','MSFT','AVGO','QCOM','TXN','MU','AMAT') else 'Financials/Other')
+        name = info.get('shortName') or info.get('longName') or (existing_stock.get('company') if existing_stock else None)
+        sector = info.get('sector') or (existing_stock.get('sector') if existing_stock else None)
+
+        if not name or not sector or sector == 'Financials/Other':
+            fb_name, fb_sec = fetch_ticker_profile_fallback(symbol)
+            if not name and fb_name:
+                name = fb_name
+            if (not sector or sector == 'Financials/Other') and fb_sec:
+                sector = fb_sec
+
+        name = name or symbol
+        sector = sector or ('Technology' if symbol in ('INTC','NVDA','AMD','AAPL','MSFT','AVGO','QCOM','TXN','MU','AMAT') else 'Financials/Other')
+        info['shortName'] = name
+        info['sector'] = sector
 
         inc = t.income_stmt
         bal = t.balance_sheet
@@ -514,6 +594,8 @@ def analyze_single_ticker(symbol, force_full=False):
             'warnings': warnings + data_notes,
             'due_diligence': dd_questions,
             'trends': fund['trends'],
+            'last_analyzed': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'last_analyzed_epoch': int(time.time()),
         }
     except Exception as exc:
         err_msg = f"{type(exc).__name__}: {exc}"
@@ -619,10 +701,52 @@ def load_existing_database():
     return [], [], []
 
 
-def save_database_to_disk(results, cohorts_eval, watchlists=None):
-    """Saves the full merged database (including shared watchlists) to CSV and HTML."""
+def load_existing_scan_meta():
+    """Loads existing scan_meta timestamps from OUTPUT_HTML, seeding defaults if missing."""
+    default_meta = {
+        'last_full_scan': None,
+        'last_sector_scan': None,
+        'last_watchlist_scan': None,
+        'last_single_scan': None,
+        'recent_single_scans': [],
+        'sector_history': {},
+        'watchlist_history': {},
+    }
+    if not os.path.exists(OUTPUT_HTML):
+        return default_meta
+    try:
+        with open(OUTPUT_HTML, 'r', encoding='utf-8') as f:
+            for line in f:
+                if 'PAYLOAD = {' in line:
+                    raw = line.split('PAYLOAD = ', 1)[1].strip().rstrip(';')
+                    data = json.loads(raw)
+                    meta = data.get('scan_meta')
+                    out = dict(default_meta)
+                    if isinstance(meta, dict):
+                        out.update(meta)
+                    if not out.get('last_full_scan'):
+                        stocks = data.get('stocks', [])
+                        if stocks:
+                            mtime = int(os.path.getmtime(OUTPUT_HTML))
+                            dt_str = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
+                            out['last_full_scan'] = {
+                                'timestamp': dt_str,
+                                'epoch': mtime,
+                                'count': len(stocks),
+                                'mode': 'full_universe',
+                            }
+                    return out
+    except Exception:
+        pass
+    return default_meta
+
+
+def save_database_to_disk(results, cohorts_eval, watchlists=None, scan_meta=None):
+    """Saves the full merged database (including shared watchlists and scan_meta) to CSV and HTML."""
     if watchlists is None:
         _, _, watchlists = load_existing_database()
+    if scan_meta is None:
+        scan_meta = load_existing_scan_meta()
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     csv_rows = []
     for r in results:
@@ -656,20 +780,29 @@ def save_database_to_disk(results, cohorts_eval, watchlists=None):
             'Insider Buy Value ($)': round(r['insider_buy_value'], 0),
             'Red Flags': ' | '.join(r['red_flags']),
             'Warnings': ' | '.join(r['warnings']),
+            'Last Analyzed': r.get('last_analyzed', ''),
         })
     pd.DataFrame(csv_rows).to_csv(OUTPUT_CSV, index=False)
-    html = build_html_dashboard(results, cohorts_eval, watchlists)
+    html = build_html_dashboard(results, cohorts_eval, watchlists, scan_meta)
     with open(OUTPUT_HTML, 'w', encoding='utf-8') as f:
         f.write(html)
 
 
-def run_screener(max_stocks=None, progress_callback=None, mode='full_universe', custom_tickers=None):
+def run_screener(max_stocks=None, progress_callback=None, mode='full_universe', custom_tickers=None, watchlist_name=None):
     existing_stocks, existing_cohorts, existing_watchlists = load_existing_database()
+    scan_meta = load_existing_scan_meta()
     existing_map = {s['ticker'].upper(): s for s in existing_stocks if s.get('ticker')}
 
-    is_watchlist_scan = (mode == 'watchlist' and custom_tickers)
-    if is_watchlist_scan:
-        tickers = [str(t).strip().upper().replace('.', '-') for t in custom_tickers if str(t).strip()]
+    is_sector_or_wl_scan = (mode in ('sector', 'watchlist') and (custom_tickers or watchlist_name))
+    if is_sector_or_wl_scan:
+        if custom_tickers:
+            tickers = [str(t).strip().upper().replace('.', '-') for t in custom_tickers if str(t).strip()]
+        else:
+            target_sec = str(watchlist_name or '').strip().lower()
+            tickers = sorted([
+                s['ticker'].upper() for s in existing_stocks
+                if s.get('ticker') and str(s.get('sector') or '').strip().lower() == target_sec
+            ])
     elif mode == 'current_db' and existing_map:
         tickers = sorted(existing_map.keys())
     else:
@@ -710,7 +843,7 @@ def run_screener(max_stocks=None, progress_callback=None, mode='full_universe', 
         })
 
     with ThreadPoolExecutor(max_workers=6) as pool:
-        future_map = {pool.submit(analyze_single_ticker, sym, is_watchlist_scan): sym for sym in tickers}
+        future_map = {pool.submit(analyze_single_ticker, sym, is_sector_or_wl_scan): sym for sym in tickers}
         for fut in as_completed(future_map):
             completed += 1
             sym = future_map[fut]
@@ -770,22 +903,51 @@ def run_screener(max_stocks=None, progress_callback=None, mode='full_universe', 
             'insider_count': insider_count,
         })
 
-    if is_watchlist_scan:
-        # For a Watchlist scan, run Deep Research Dossier on EVERY stock in the watchlist!
-        for sym_u, row_obj in scanned_map.items():
-            enrich_single_stock_with_research(row_obj)
+    now_epoch = int(time.time())
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    if is_sector_or_wl_scan:
+        scanned_list = list(scanned_map.values())
+        if len(scanned_list) <= 20:
+            for row_obj in scanned_list:
+                enrich_single_stock_with_research(row_obj)
+        else:
+            enrich_top_stocks_with_research(scanned_list, max_research=12)
         cohorts_eval = existing_cohorts
+
+        sec_label = str(watchlist_name or "Sector Analysis").strip()
+        sec_entry = {
+            'timestamp': now_str,
+            'epoch': now_epoch,
+            'name': sec_label,
+            'count': len(scanned_map),
+            'tickers': sorted(list(scanned_map.keys())),
+        }
+        scan_meta['last_sector_scan'] = sec_entry
+        scan_meta['last_watchlist_scan'] = sec_entry
+        sec_hist = scan_meta.get('sector_history') if isinstance(scan_meta.get('sector_history'), dict) else {}
+        sec_hist[sec_label] = sec_entry
+        scan_meta['sector_history'] = sec_hist
+        wl_hist = scan_meta.get('watchlist_history') if isinstance(scan_meta.get('watchlist_history'), dict) else {}
+        wl_hist[sec_label] = sec_entry
+        scan_meta['watchlist_history'] = wl_hist
     else:
         enrich_top_stocks_with_research(results, max_research=18)
         live_px = {r['ticker']: r['price'] for r in results if r.get('price')}
         cohorts_eval = record_and_evaluate(basket, current_prices=live_px)
+        scan_meta['last_full_scan'] = {
+            'timestamp': now_str,
+            'epoch': now_epoch,
+            'count': len(results),
+            'mode': mode,
+        }
 
     # Save CSV & HTML
-    save_database_to_disk(results, cohorts_eval, existing_watchlists)
+    save_database_to_disk(results, cohorts_eval, existing_watchlists, scan_meta)
     print(f"\n[CSV] Saved {len(results)} database stocks to: {OUTPUT_CSV}")
     print(f"[HTML] Interactive workstation saved to: {OUTPUT_HTML}")
 
-    return {'stocks': results, 'cohorts': cohorts_eval, 'watchlists': existing_watchlists}
+    return {'stocks': results, 'cohorts': cohorts_eval, 'watchlists': existing_watchlists, 'scan_meta': scan_meta}
 
 
 if __name__ == '__main__':

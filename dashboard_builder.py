@@ -12,7 +12,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>S&P 500 Quantitative Valuation & Forensic Terminal</title>
+  <title>DaTracker — Quantitative Valuation & Forensic Terminal</title>
+  <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,__ICON_ICO_B64__">
+  <link rel="apple-touch-icon" href="data:image/png;base64,__LOGO_PNG_B64__">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -117,6 +119,24 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       box-shadow: 0 0 14px rgba(52, 211, 153, 0.35);
       flex-shrink: 0;
     }
+    .brand-logo-wrap {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(59, 130, 246, 0.18) 100%);
+      border: 1px solid rgba(52, 211, 153, 0.38);
+      box-shadow: 0 0 16px rgba(52, 211, 153, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .brand-logo {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      filter: invert(1) drop-shadow(0 0 5px rgba(52, 211, 153, 0.45));
+    }
     .brand-title {
       font-size: 16px;
       font-weight: 600;
@@ -129,6 +149,107 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       margin-top: 1px;
       font-family: var(--font-mono);
       letter-spacing: -0.01em;
+    }
+    /* ANALYSIS TIMESTAMP MEMORY STRIP */
+    .audit-memory-wrap {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-dim);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-card);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .audit-mem-card {
+      background: rgba(10, 13, 19, 0.72);
+      border: 1px solid var(--border-dim);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 4px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .audit-mem-card:hover {
+      border-color: var(--border-mid);
+      background: rgba(16, 21, 30, 0.85);
+    }
+    .audit-mem-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .audit-mem-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .audit-mem-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green-text);
+      box-shadow: 0 0 6px rgba(52, 211, 153, 0.6);
+      display: inline-block;
+    }
+    .audit-mem-dot.dim {
+      background: var(--text-muted);
+      box-shadow: none;
+    }
+    .audit-mem-ago {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--green-text);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      padding: 1px 6px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .audit-mem-ago.empty {
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--border-dim);
+    }
+    .audit-mem-time {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .audit-mem-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .audit-mem-pill {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--blue-text);
+      background: var(--blue-bg);
+      border: 1px solid var(--blue-border);
+      padding: 1px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .audit-mem-pill:hover {
+      background: rgba(59, 130, 246, 0.22);
+      color: #fff;
     }
     .mobile-only-actions {
       display: none !important;
@@ -1591,6 +1712,21 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         width: 5px !important;
         height: 18px !important;
       }
+      .brand-logo-wrap {
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: 7px !important;
+      }
+      .brand-logo {
+        width: 18px !important;
+        height: 18px !important;
+      }
+      .audit-memory-wrap {
+        grid-template-columns: 1fr !important;
+        padding: 8px 10px !important;
+        gap: 6px !important;
+        margin-bottom: 10px !important;
+      }
       .brand-title {
         font-size: 13px !important;
         font-weight: 700 !important;
@@ -1979,13 +2115,15 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     <div class="masthead-inner">
       <div class="brand-group">
         <div class="brand-title-wrap">
-          <div class="brand-mark"></div>
+          <div class="brand-logo-wrap">
+            <img src="data:image/png;base64,__LOGO_PNG_B64__" alt="DaTracker Logo" class="brand-logo">
+          </div>
           <div>
             <div class="brand-title">
-              <span class="desktop-title">S&amp;P 500 Quantitative Valuation &amp; Forensic Terminal</span>
-              <span class="mobile-title">S&amp;P 500 Terminal</span>
+              <span class="desktop-title"><strong style="font-weight:700;color:#ffffff;letter-spacing:-0.03em;">DaTracker</strong> <span style="color:var(--border-strong);margin:0 6px;font-weight:300;">|</span> <span style="font-weight:500;color:var(--text-secondary);font-size:14.5px;">Quantitative Valuation &amp; Forensic Terminal</span></span>
+              <span class="mobile-title">DaTracker</span>
             </div>
-            <div class="brand-sub">4-Year 10-K Audit  /  Owner FCF ex-SBC  /  Piotroski, Altman Z, Beneish M  /  Reverse DCF  /  OpenInsider</div>
+            <div class="brand-sub">datracker.net  /  4-Year 10-K Audit  /  Owner FCF ex-SBC  /  Piotroski, Altman Z, Beneish M  /  Reverse DCF  /  OpenInsider</div>
           </div>
         </div>
         <div class="header-btn-group mobile-only-actions">
@@ -2015,10 +2153,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   </header>
 
   <main class="container">
+    <!-- ANALYSIS TIMESTAMP MEMORY BAR (WHOLE DATABASE / SECTORS / SINGLE STOCKS) -->
+    <div class="audit-memory-wrap" id="audit-memory-container"></div>
+
     <!-- SECTOR MOMENTUM & ROTATION HEATMAP BAR -->
     <div class="sector-bar-wrap" id="sector-bar-container"></div>
 
-    <!-- SHARED WATCHLISTS BAR & ACTIVE WATCHLIST WORKSPACE -->
+    <!-- DEEP SECTOR INTELLIGENCE & TARGETED SECTOR AUDIT WORKSPACE -->
     <div class="watchlist-wrap" id="watchlist-container"></div>
 
     <!-- FILTER & VIEW TOOLBAR -->
@@ -2026,6 +2167,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       <div class="seg-group" id="segment-tabs">
         <button class="seg-btn active" data-filter="ALL" onclick="setSegment('ALL')">All Universe</button>
         <button class="seg-btn" data-filter="BASKET_ONLY" onclick="setSegment('BASKET_ONLY')">Portfolio Basket</button>
+        <button class="seg-btn" data-filter="PINNED_ONLY" id="seg-btn-pinned" onclick="setSegment('PINNED_ONLY')">&#9733; My Pinned (0)</button>
         <button class="seg-btn" data-filter="ZERO_FLAGS" onclick="setSegment('ZERO_FLAGS')">Clean 10-K (Zero Flags)</button>
         <button class="seg-btn" data-filter="HIGH_CASH" onclick="setSegment('HIGH_CASH')">High Cash Yield (&ge;5%)</button>
         <button class="seg-btn" data-filter="INSIDER_BUY" onclick="setSegment('INSIDER_BUY')">Net Insider Buying</button>
@@ -2087,223 +2229,346 @@ let PAYLOAD = __PAYLOAD_JSON__;
 let allStocks = PAYLOAD.stocks || [];
 let cohorts = PAYLOAD.cohorts || [];
 let watchlists = PAYLOAD.watchlists || [];
+let scanMeta = PAYLOAD.scan_meta || {};
+let pinnedTickers = [];
 try {
-  if ((!watchlists || watchlists.length === 0) && window.localStorage) {
-    const cachedWls = localStorage.getItem('sp500_shared_watchlists');
-    if (cachedWls) watchlists = JSON.parse(cachedWls) || [];
+  if (window.localStorage) {
+    const cachedPins = localStorage.getItem('datracker_pinned_tickers');
+    if (cachedPins) pinnedTickers = JSON.parse(cachedPins) || [];
+    const cachedMeta = localStorage.getItem('datracker_scan_meta');
+    if (cachedMeta) {
+      const parsed = JSON.parse(cachedMeta);
+      if (parsed && typeof parsed === 'object') {
+        if (!scanMeta.last_full_scan && parsed.last_full_scan) scanMeta.last_full_scan = parsed.last_full_scan;
+        if (!scanMeta.last_sector_scan && parsed.last_sector_scan) scanMeta.last_sector_scan = parsed.last_sector_scan;
+        if (!scanMeta.last_watchlist_scan && parsed.last_watchlist_scan) scanMeta.last_watchlist_scan = parsed.last_watchlist_scan;
+        if (!scanMeta.last_single_scan && parsed.last_single_scan) scanMeta.last_single_scan = parsed.last_single_scan;
+        if ((!scanMeta.recent_single_scans || !scanMeta.recent_single_scans.length) && Array.isArray(parsed.recent_single_scans)) {
+          scanMeta.recent_single_scans = parsed.recent_single_scans;
+        }
+        if (!scanMeta.sector_history && parsed.sector_history) scanMeta.sector_history = parsed.sector_history;
+        if (!scanMeta.watchlist_history && parsed.watchlist_history) scanMeta.watchlist_history = parsed.watchlist_history;
+      }
+    }
   }
 } catch (e) {}
 
+function isTickerPinned(ticker) {
+  const up = String(ticker || '').toUpperCase();
+  return pinnedTickers.includes(up);
+}
+
+function updatePinnedTabLabel() {
+  const btn = document.getElementById('seg-btn-pinned');
+  if (btn) {
+    btn.innerHTML = `&#9733; My Pinned (${pinnedTickers.length})`;
+  }
+}
+
+function togglePinTicker(ticker, ev) {
+  if (ev) ev.stopPropagation();
+  const up = String(ticker || '').toUpperCase();
+  if (!up) return;
+  if (pinnedTickers.includes(up)) {
+    pinnedTickers = pinnedTickers.filter(t => t !== up);
+  } else {
+    pinnedTickers.push(up);
+  }
+  try {
+    if (window.localStorage) {
+      localStorage.setItem('datracker_pinned_tickers', JSON.stringify(pinnedTickers));
+    }
+  } catch (e) {}
+  updatePinnedTabLabel();
+  render();
+  const modalEl = document.getElementById('modal-backdrop');
+  if (modalEl && modalEl.style.display === 'flex') {
+    const cur = allStocks.find(s => s.ticker.toUpperCase() === up);
+    if (cur && document.querySelector('.modal-ticker') && document.querySelector('.modal-ticker').textContent === cur.ticker) {
+      openModal(cur.ticker);
+    }
+  }
+}
+
+function saveScanMetaLocal() {
+  PAYLOAD.scan_meta = scanMeta;
+  try {
+    if (window.localStorage) {
+      localStorage.setItem('datracker_scan_meta', JSON.stringify(scanMeta));
+    }
+  } catch (e) {}
+}
+
+function fmtRelativeTime(epochSec) {
+  if (!epochSec) return '';
+  const diff = Math.max(0, Math.floor(Date.now() / 1000) - Number(epochSec));
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  return Math.floor(diff / 86400) + 'd ago';
+}
+
+function renderAuditMemoryBar() {
+  const container = document.getElementById('audit-memory-container');
+  if (!container) return;
+
+  const full = scanMeta.last_full_scan || null;
+  const secScan = scanMeta.last_sector_scan || scanMeta.last_watchlist_scan || null;
+  const single = scanMeta.last_single_scan || null;
+  const recentSingles = Array.isArray(scanMeta.recent_single_scans) ? scanMeta.recent_single_scans : [];
+
+  const fullAgo = full && full.epoch ? fmtRelativeTime(full.epoch) : '';
+  const secAgo = secScan && secScan.epoch ? fmtRelativeTime(secScan.epoch) : '';
+  const singleAgo = single && single.epoch ? fmtRelativeTime(single.epoch) : '';
+
+  const recentPills = recentSingles.slice(0, 4).map(r =>
+    `<span class="audit-mem-pill" onclick="event.stopPropagation();openModal('${r.ticker}')" title="Audited on ${r.timestamp || ''}">${r.ticker}</span>`
+  ).join('');
+
+  const secClick = secScan && secScan.name
+    ? `selectSectorFromBar('${secScan.name.replace(/'/g, "\\'")}')`
+    : `openScannerModal()`;
+
+  container.innerHTML = `
+    <div class="audit-mem-card" onclick="openScannerModal()" style="cursor:pointer;" title="Click to open Live Quantitative Screener">
+      <div class="audit-mem-top">
+        <span class="audit-mem-label"><span class="audit-mem-dot ${full ? '' : 'dim'}"></span>Last Whole Database Analysis</span>
+        <span class="audit-mem-ago ${full ? '' : 'empty'}">${full ? (fullAgo || 'Recorded') : 'Not Run Yet'}</span>
+      </div>
+      <div class="audit-mem-time">${full && full.timestamp ? full.timestamp : 'No full database scan recorded'}</div>
+      <div class="audit-mem-sub">
+        <span>${full ? `<strong class="c-prime">${full.count || allStocks.length}</strong> securities audited` : `Cached DB: ${allStocks.length} securities`}</span>
+        <span class="c-muted" style="font-family:var(--font-mono);font-size:10px;">Run Full Scan &rarr;</span>
+      </div>
+    </div>
+
+    <div class="audit-mem-card" onclick="${secClick}" style="cursor:pointer;" title="Click to inspect or analyze a sector">
+      <div class="audit-mem-top">
+        <span class="audit-mem-label"><span class="audit-mem-dot ${secScan ? '' : 'dim'}"></span>Last Sector Analysis</span>
+        <span class="audit-mem-ago ${secScan ? '' : 'empty'}">${secScan ? (secAgo || 'Recorded') : 'Not Run Yet'}</span>
+      </div>
+      <div class="audit-mem-time">${secScan && secScan.timestamp ? secScan.timestamp : 'No targeted sector scan recorded'}</div>
+      <div class="audit-mem-sub">
+        <span>${secScan ? `Sector: <strong class="c-prime">${secScan.name}</strong> (${secScan.count || 0} stocks)` : `11 GICS Sectors tracked &bull; Click any sector below`}</span>
+        <span class="c-muted" style="font-family:var(--font-mono);font-size:10px;" onclick="event.stopPropagation();openScannerModal();">Audit Sector &rarr;</span>
+      </div>
+    </div>
+
+    <div class="audit-mem-card">
+      <div class="audit-mem-top">
+        <span class="audit-mem-label"><span class="audit-mem-dot ${single ? '' : 'dim'}"></span>Last Single-Stock Analysis</span>
+        <span class="audit-mem-ago ${single ? '' : 'empty'}">${single ? (singleAgo || 'Recorded') : 'Not Run Yet'}</span>
+      </div>
+      <div class="audit-mem-time">${single && single.timestamp ? single.timestamp : 'No single-stock scan recorded'}</div>
+      <div class="audit-mem-sub">
+        <span>${single ? `Last: <strong class="c-pos" style="cursor:pointer;" onclick="openModal('${single.ticker}')">${single.ticker}</strong>${single.tier ? ` (Tier ${single.tier})` : ''}` : 'Use search bar or scanner to audit'}</span>
+        <div style="display:flex;gap:4px;align-items:center;">${recentPills}</div>
+      </div>
+    </div>
+  `;
+}
+
 let activeSegment = 'ALL';
 let activeWatchlistId = null;
-let showNewWatchlistForm = false;
 let viewMode = 'GRID';
 let currentFiltered = [];
 let scanPollTimer = null;
 
-async function syncWatchlistsToServer() {
-  PAYLOAD.watchlists = watchlists;
-  try {
-    if (window.localStorage) {
-      localStorage.setItem('sp500_shared_watchlists', JSON.stringify(watchlists));
+function medianOf(arr) {
+  if (!arr || arr.length === 0) return null;
+  const sorted = [...arr].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+function computeSectorStats(secName) {
+  const slist = allStocks.filter(s => (s.sector || 'Other') === secName);
+  const count = slist.length;
+  const cleanStocks = slist.filter(s => s.data_ok && (!s.red_flags || s.red_flags.length === 0));
+  const flaggedStocks = slist.filter(s => s.red_flags && s.red_flags.length > 0);
+  const basketStocks = slist.filter(s => s.in_basket);
+  const buyerStocks = slist.filter(s => ['CLUSTER BUY', 'CEO/CFO BUY', 'INSIDER BUY'].includes(s.insider_signal));
+  const sellerStocks = slist.filter(s => ['C-SUITE DUMPING', 'HEAVY SELLING', 'LONE BUY / HEAVY SELLS'].includes(s.insider_signal));
+
+  const scores = slist.filter(s => s.data_ok && s.composite_score != null).map(s => s.composite_score);
+  const avgScore = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+
+  const fcfs = slist.map(s => s.owner_fcf_yield).filter(v => v != null);
+  const medFCF = medianOf(fcfs);
+
+  const roics = slist.map(s => s.roic).filter(v => v != null);
+  const medROIC = medianOf(roics);
+
+  const revs = slist.map(s => s.rev_cagr).filter(v => v != null);
+  const medRev = medianOf(revs);
+
+  const gps = slist.map(s => s.gross_profitability).filter(v => v != null);
+  const medGP = medianOf(gps);
+
+  const dds = slist.map(s => s.drawdown).filter(v => v != null);
+  const avgDD = dds.length ? (dds.reduce((a, b) => a + b, 0) / dds.length) : 0;
+  const corrPct = dds.length ? (dds.filter(d => d <= -0.20).length / dds.length * 100) : 0;
+
+  const pegs = [];
+  slist.forEach(s => {
+    const fcfY = s.owner_fcf_yield || 0;
+    const conv = s.cash_conversion || 1.0;
+    const revG = s.rev_cagr || 0;
+    const divY = s.dividend_yield || 0;
+    const pe = (fcfY > 0 && conv > 0) ? (conv / fcfY) : null;
+    const totG = revG + divY;
+    if (pe && totG > 0.005) {
+      const val = pe / (totG * 100);
+      if (val > 0 && val < 25) pegs.push(val);
     }
-  } catch (e) {}
-  try {
-    const res = await fetch('/api/watchlists', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ watchlists })
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data && Array.isArray(data.watchlists)) {
-        watchlists = data.watchlists;
-        PAYLOAD.watchlists = watchlists;
-      }
-    }
-  } catch (e) {}
-}
-
-function selectWatchlist(wid) {
-  activeWatchlistId = (wid === activeWatchlistId) ? null : wid;
-  showNewWatchlistForm = false;
-  render();
-}
-
-function toggleNewWatchlistForm() {
-  showNewWatchlistForm = !showNewWatchlistForm;
-  renderWatchlistsBar();
-  if (showNewWatchlistForm) {
-    const inp = document.getElementById('new-wl-name');
-    if (inp) inp.focus();
-  }
-}
-
-async function createWatchlistFromForm() {
-  const nameEl = document.getElementById('new-wl-name');
-  const tickersEl = document.getElementById('new-wl-tickers');
-  const name = (nameEl ? nameEl.value : '').trim();
-  if (!name) {
-    if (nameEl) nameEl.focus();
-    return;
-  }
-  const rawTickers = (tickersEl ? tickersEl.value : '').toUpperCase().split(/[\s,;]+/).map(t => t.trim()).filter(Boolean);
-  const uniqueTickers = [...new Set(rawTickers)];
-  const newId = 'wl_' + Date.now();
-  watchlists.push({ id: newId, name, tickers: uniqueTickers });
-  activeWatchlistId = newId;
-  showNewWatchlistForm = false;
-  render();
-  await syncWatchlistsToServer();
-}
-
-async function addTickersToWatchlist(wid) {
-  const wl = watchlists.find(w => w.id === wid);
-  if (!wl) return;
-  const inp = document.getElementById('add-wl-tickers-input');
-  if (!inp) return;
-  const raw = inp.value.toUpperCase().split(/[\s,;]+/).map(t => t.trim()).filter(Boolean);
-  if (raw.length === 0) return;
-  raw.forEach(t => {
-    if (!wl.tickers.includes(t)) wl.tickers.push(t);
   });
-  inp.value = '';
-  render();
-  await syncWatchlistsToServer();
+  const medPEG = medianOf(pegs);
+
+  let regime = 'NEUTRAL';
+  if (avgDD > -0.12) regime = 'LEADING';
+  else if (avgDD <= -0.18) regime = 'HEADWIND';
+
+  const topLeaders = [...cleanStocks].sort((a, b) => (b.composite_score || 0) - (a.composite_score || 0)).slice(0, 6);
+  const topTraps = [...flaggedStocks].sort((a, b) => (a.composite_score || 0) - (b.composite_score || 0)).slice(0, 5);
+
+  const secHistMap = scanMeta.sector_history || scanMeta.watchlist_history || {};
+  const lastSecObj = secHistMap[secName] || null;
+  const lastAnalyzed = lastSecObj && lastSecObj.timestamp ? lastSecObj.timestamp : null;
+
+  return {
+    name: secName,
+    count,
+    cleanCount: cleanStocks.length,
+    cleanPct: count > 0 ? (cleanStocks.length / count * 100) : 0,
+    flaggedCount: flaggedStocks.length,
+    basketCount: basketStocks.length,
+    buyerCount: buyerStocks.length,
+    sellerCount: sellerStocks.length,
+    avgScore,
+    medFCF,
+    medROIC,
+    medRev,
+    medGP,
+    medPEG,
+    avgDD,
+    corrPct,
+    regime,
+    topLeaders,
+    topTraps,
+    lastAnalyzed,
+    tickers: slist.map(s => s.ticker)
+  };
 }
 
-async function removeTickerFromWatchlist(wid, ticker, ev) {
-  if (ev) ev.stopPropagation();
-  const wl = watchlists.find(w => w.id === wid);
-  if (!wl) return;
-  wl.tickers = wl.tickers.filter(t => t.toUpperCase() !== ticker.toUpperCase());
-  render();
-  await syncWatchlistsToServer();
+function getAllSectorStats() {
+  const names = [...new Set(allStocks.map(s => s.sector || 'Other'))];
+  const stats = names.map(n => computeSectorStats(n));
+  stats.sort((a, b) => b.avgDD - a.avgDD);
+  return stats;
 }
 
-async function toggleTickerInWatchlist(wid, ticker) {
-  const wl = watchlists.find(w => w.id === wid);
-  if (!wl) return;
-  const up = ticker.toUpperCase();
-  if (wl.tickers.includes(up)) {
-    wl.tickers = wl.tickers.filter(t => t !== up);
-  } else {
-    wl.tickers.push(up);
-  }
-  await syncWatchlistsToServer();
-  renderWatchlistsBar();
-  openModal(ticker);
-}
-
-async function deleteWatchlist(wid) {
-  const wl = watchlists.find(w => w.id === wid);
-  if (!wl) return;
-  watchlists = watchlists.filter(w => w.id !== wid);
-  if (activeWatchlistId === wid) activeWatchlistId = null;
-  render();
-  await syncWatchlistsToServer();
-}
-
-function runWatchlistAnalysis(wid) {
-  const wl = watchlists.find(w => w.id === wid);
-  if (!wl || !wl.tickers || wl.tickers.length === 0) return;
+function runSectorAnalysis(secName) {
+  const st = computeSectorStats(secName);
+  if (!st || !st.tickers || st.tickers.length === 0) return;
   openScannerModal();
-  triggerLiveScan('watchlist', wl.tickers, wl.name);
+  triggerLiveScan('sector', st.tickers, secName);
 }
 
 function renderWatchlistsBar() {
   const container = document.getElementById('watchlist-container');
   if (!container) return;
 
-  const allPillCls = activeWatchlistId === null ? 'wl-pill active' : 'wl-pill';
+  const selEl = document.getElementById('sector-filter');
+  const activeSector = selEl ? selEl.value : 'ALL';
+  const allSecStats = getAllSectorStats();
+
   const pillsHTML = [
-    `<button class="${allPillCls}" onclick="selectWatchlist(null)">All Shared Database <span class="wl-pill-count">${allStocks.length}</span></button>`,
-    ...watchlists.map(w => {
-      const cls = activeWatchlistId === w.id ? 'wl-pill active' : 'wl-pill';
-      return `<button class="${cls}" onclick="selectWatchlist('${w.id}')">${w.name} <span class="wl-pill-count">${(w.tickers || []).length}</span></button>`;
-    }),
-    `<button class="wl-new-btn" onclick="toggleNewWatchlistForm()">+ New Watchlist</button>`
+    `<button class="wl-pill ${activeSector === 'ALL' ? 'active' : ''}" onclick="selectSectorFromBar('ALL')">All Sectors <span class="wl-pill-count">${allStocks.length}</span></button>`,
+    ...allSecStats.map(sec => {
+      const isAct = activeSector === sec.name;
+      return `<button class="wl-pill ${isAct ? 'active' : ''}" onclick="selectSectorFromBar('${sec.name.replace(/'/g, "\\'")}')">${sec.name} <span class="wl-pill-count">${sec.count}</span></button>`;
+    })
   ].join('');
 
-  let formHTML = '';
-  if (showNewWatchlistForm) {
-    formHTML = `
+  let activePanelHTML = '';
+  if (activeSector && activeSector !== 'ALL') {
+    const st = computeSectorStats(activeSector);
+    const etf = sectorETFs[st.name] || '';
+    const regCls = st.regime === 'LEADING' ? 'c-pos' : (st.regime === 'HEADWIND' ? 'c-neg' : 'c-prime');
+    const fcfCls = st.medFCF != null && st.medFCF >= 0.045 ? 'c-pos' : (st.medFCF != null && st.medFCF < 0.025 ? 'c-neg' : 'c-prime');
+    const roicCls = st.medROIC != null && st.medROIC >= 0.15 ? 'c-pos' : (st.medROIC != null && st.medROIC < 0.08 ? 'c-neg' : 'c-prime');
+    const pegCls = st.medPEG != null && st.medPEG < 1.2 ? 'c-pos' : (st.medPEG != null && st.medPEG > 2.0 ? 'c-neg' : 'c-prime');
+    const cleanCls = st.cleanPct >= 60 ? 'c-pos' : (st.cleanPct < 40 ? 'c-neg' : 'c-prime');
+    const ddCls = st.avgDD > -0.12 ? 'c-pos' : (st.avgDD <= -0.18 ? 'c-neg' : 'c-prime');
+    const lastStamp = st.lastAnalyzed || (scanMeta.last_full_scan && scanMeta.last_full_scan.timestamp ? scanMeta.last_full_scan.timestamp + ' (Full DB)' : 'Baseline DB');
+
+    const leaderChips = st.topLeaders.length > 0
+      ? st.topLeaders.map(s => `
+          <span class="wl-chip" onclick="openModal('${s.ticker}')" title="${s.company} — Score: ${s.composite_score.toFixed(1)}, Cash Yield: ${fmtPct(s.owner_fcf_yield, 1)}, ROIC: ${fmtPct(s.roic, 1)}">
+            <strong class="c-pos">${s.ticker}</strong>
+            <span class="c-prime" style="font-size:10.5px;">${s.composite_score.toFixed(1)}</span>
+            <span class="c-muted" style="font-size:10px;">FCF ${fmtPct(s.owner_fcf_yield, 1)}</span>
+          </span>
+        `).join('')
+      : '<span class="c-muted" style="font-size:11.5px;">No zero-flag stocks in this sector.</span>';
+
+    const trapChips = st.topTraps.length > 0
+      ? st.topTraps.map(s => `
+          <span class="wl-chip" onclick="openModal('${s.ticker}')" title="${s.company} — Red Flag: ${(s.red_flags && s.red_flags[0]) || 'Disqualified'}">
+            <strong class="c-neg">${s.ticker}</strong>
+            <span class="c-muted" style="font-size:10px;">${s.composite_score.toFixed(0)}/100</span>
+          </span>
+        `).join('')
+      : '<span class="c-pos" style="font-size:11.5px;">0 hard red-flagged stocks in this sector</span>';
+
+    activePanelHTML = `
       <div class="wl-active-panel">
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-          <span class="watchlist-label" style="color:var(--green-text);">Create Shared Watchlist</span>
-          <input type="text" id="new-wl-name" class="wl-input" placeholder="Watchlist Name (e.g. AI Infrastructure, Compounders)..." onkeydown="if(event.key==='Enter')createWatchlistFromForm()">
-          <input type="text" id="new-wl-tickers" class="wl-input" placeholder="Optional initial tickers (e.g. NVDA, AVGO, ANET)..." style="flex:1;" onkeydown="if(event.key==='Enter')createWatchlistFromForm()">
-          <button class="btn-primary" onclick="createWatchlistFromForm()">Save Shared Watchlist</button>
-          <button class="btn-secondary" onclick="toggleNewWatchlistForm()">Cancel</button>
+        <div class="wl-panel-header">
+          <div>
+            <span style="font-size:15px;font-weight:700;color:var(--text-primary);">${st.name} Sector Intelligence</span>
+            ${etf ? `<span class="tag tag-blue" style="margin-left:8px;">ETF: ${etf}</span>` : ''}
+            <span class="tag" style="margin-left:4px;"><strong class="${regCls}">${st.regime} REGIME</strong></span>
+            <div class="c-muted" style="font-family:var(--font-mono);font-size:11.5px;margin-top:4px;">
+              <strong>${st.count}</strong> Companies &bull; <strong class="c-pos">${st.cleanCount} Clean 10-K</strong> &bull; <strong class="c-neg">${st.flaggedCount} Disqualified</strong> &bull; <strong class="c-prime">${st.basketCount} in Top Basket</strong> &bull; Last Sector Audit: <strong class="c-pos">${lastStamp}</strong>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <button class="btn-primary" onclick="runSectorAnalysis('${st.name.replace(/'/g, "\\'")}')"><span class="pulse-dot"></span>Analyze All ${st.name} Stocks (${st.count} Stocks)</button>
+            ${etf ? `<a href="https://www.tradingview.com/chart/?symbol=AMEX%3A${etf}" target="_blank" rel="noopener" class="btn-secondary" style="text-decoration:none;">Open ${etf} Chart &nearr;</a>` : ''}
+            <button class="btn-secondary" onclick="selectSectorFromBar('ALL')">Show All Sectors</button>
+          </div>
+        </div>
+
+        <div class="verdict-meta-grid" style="background:rgba(10,13,19,0.75);border:1px solid var(--border-dim);padding:10px 14px;border-radius:8px;margin-top:4px;">
+          <div><span class="k">Sector Avg Quant Score</span><span class="v c-prime">${st.avgScore.toFixed(1)} / 100</span></div>
+          <div><span class="k">Median Owner Cash Yield</span><span class="v ${fcfCls}">${fmtPct(st.medFCF, 2)}</span></div>
+          <div><span class="k">Median 3Y ROIC</span><span class="v ${roicCls}">${fmtPct(st.medROIC, 1)}</span></div>
+          <div><span class="k">Median 3Y Lynch PEG/PEGY</span><span class="v ${pegCls}">${st.medPEG != null ? st.medPEG.toFixed(2) + 'x' : 'N/A'}</span></div>
+          <div><span class="k">Clean 10-K Pass Rate</span><span class="v ${cleanCls}">${st.cleanPct.toFixed(0)}% (${st.cleanCount}/${st.count})</span></div>
+          <div><span class="k">Executive Insider Breadth</span><span class="v"><strong class="c-pos">${st.buyerCount} Buy</strong> / <strong class="c-neg">${st.sellerCount} Sell</strong></span></div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:2px;">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <span class="watchlist-label" style="color:var(--green-text);">Top Sector Leaders:</span>
+            ${leaderChips}
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <span class="watchlist-label" style="color:var(--red-text);">Disqualified / Avoid:</span>
+            ${trapChips}
+          </div>
         </div>
       </div>
     `;
   }
 
-  let activePanelHTML = '';
-  if (activeWatchlistId) {
-    const wl = watchlists.find(w => w.id === activeWatchlistId);
-    if (wl) {
-      const tickers = wl.tickers || [];
-      const inDbCount = tickers.filter(t => allStocks.some(s => s.ticker.toUpperCase() === t.toUpperCase())).length;
-      const unscannedCount = tickers.length - inDbCount;
-
-      const chips = tickers.length > 0
-        ? tickers.map(t => {
-            const st = allStocks.find(s => s.ticker.toUpperCase() === t.toUpperCase());
-            let metaBadge = '<span class="c-warn" style="font-size:10px;">Unscanned</span>';
-            if (st) {
-              const hasFlags = st.red_flags && st.red_flags.length > 0;
-              const sCls = (!hasFlags && st.composite_score >= 60) ? 'c-pos' : (hasFlags || st.composite_score < 45 ? 'c-neg' : 'c-prime');
-              metaBadge = `<span class="${sCls}" style="font-size:10.5px;">${st.data_ok ? st.composite_score.toFixed(0) : 'N/A'}</span>`;
-            }
-            const clickAct = st ? `openModal('${st.ticker}')` : `auditSingleTicker('${t}')`;
-            return `
-              <span class="wl-chip" onclick="${clickAct}" title="${st ? st.company + ' — Click to inspect dossier' : 'Not yet in database — Click to audit ' + t}">
-                <strong>${t}</strong>
-                ${metaBadge}
-                <span class="wl-chip-del" onclick="removeTickerFromWatchlist('${wl.id}', '${t}', event)" title="Remove ${t} from watchlist">&times;</span>
-              </span>
-            `;
-          }).join('')
-        : '<span class="c-muted" style="font-size:12px;">No companies in this watchlist yet. Add tickers below or from inside any stock dossier.</span>';
-
-      activePanelHTML = `
-        <div class="wl-active-panel">
-          <div class="wl-panel-header">
-            <div>
-              <span style="font-size:14px;font-weight:600;color:var(--text-primary);">${wl.name}</span>
-              <span class="c-muted" style="font-family:var(--font-mono);font-size:11.5px;margin-left:10px;">
-                ${tickers.length} Companies (${inDbCount} audited in DB${unscannedCount > 0 ? `, <strong class="c-warn">${unscannedCount} pending initial audit</strong>` : ''})
-              </span>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-              ${tickers.length > 0 ? `<button class="btn-primary" onclick="runWatchlistAnalysis('${wl.id}')"><span class="pulse-dot"></span>Analyze This Watchlist Alone (${tickers.length} Stocks)</button>` : ''}
-              <button class="btn-secondary" onclick="selectWatchlist(null)">Show All Database</button>
-              <button class="btn-secondary" style="color:var(--red-text);border-color:rgba(239,68,68,0.28);" onclick="deleteWatchlist('${wl.id}')">Delete Watchlist</button>
-            </div>
-          </div>
-
-          <div class="wl-chip-list">${chips}</div>
-
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:2px;">
-            <input type="text" id="add-wl-tickers-input" class="wl-input" placeholder="Add tickers to ${wl.name} (e.g. AAPL, MSFT, RDDT, SOFI)..." style="flex:1;" onkeydown="if(event.key==='Enter')addTickersToWatchlist('${wl.id}')">
-            <button class="btn-secondary" onclick="addTickersToWatchlist('${wl.id}')">+ Add Companies</button>
-            <span class="c-muted" style="font-size:11px;font-family:var(--font-mono);">Clicking "Analyze This Watchlist Alone" runs the full 4-Year 10-K + SEC EDGAR + OpenInsider audit on these ${tickers.length} companies and updates the shared database.</span>
-          </div>
-        </div>
-      `;
-    }
-  }
-
   container.innerHTML = `
     <div class="watchlist-top">
       <div class="watchlist-pills">
-        <span class="watchlist-label">Shared Watchlists</span>
+        <span class="watchlist-label">Sector Deep Dive &amp; Live Audit</span>
         ${pillsHTML}
       </div>
     </div>
-    ${formHTML}
     ${activePanelHTML}
   `;
 }
@@ -2558,6 +2823,26 @@ async function auditSingleTicker(rawSymbol) {
       } else {
         allStocks.push(stock);
       }
+    }
+    if (data.scan_meta && typeof data.scan_meta === 'object') {
+      scanMeta = data.scan_meta;
+      saveScanMetaLocal();
+    } else {
+      const nowEpoch = Math.floor(Date.now() / 1000);
+      const nowStr = stock.last_analyzed || new Date().toISOString().replace('T', ' ').slice(0, 19);
+      const entry = {
+        timestamp: nowStr,
+        epoch: nowEpoch,
+        ticker: stock.ticker,
+        company: stock.company || stock.ticker,
+        tier: stock.tier || '',
+        score: stock.composite_score ? Number(stock.composite_score.toFixed(1)) : 0
+      };
+      scanMeta.last_single_scan = entry;
+      const prevList = Array.isArray(scanMeta.recent_single_scans) ? scanMeta.recent_single_scans.filter(x => x && x.ticker !== stock.ticker) : [];
+      prevList.unshift(entry);
+      scanMeta.recent_single_scans = prevList.slice(0, 12);
+      saveScanMetaLocal();
     }
     populateSectorFilter();
     render();
@@ -2821,7 +3106,12 @@ function createCardHTML(s) {
   } else if (cPe && cTotG <= 0.005) {
     pegyDisp = '<0 Growth';
     pegyCls = 'c-neg';
+  } else if (!cPe) {
+    pegyDisp = 'Neg FCF';
+    pegyCls = 'c-neg';
   }
+
+  const isPinned = isTickerPinned(s.ticker);
 
   return `
     <div class="stock-card ${s.in_basket ? 'in-basket' : ''}" onclick="openModal('${s.ticker}')">
@@ -2831,6 +3121,7 @@ function createCardHTML(s) {
             <div class="ticker-row">
               <span class="ticker">${s.ticker}</span>
               <span class="sector-tag ${secRegimeCls}">${s.sector}${secBadge}</span>
+              <button onclick="togglePinTicker('${s.ticker}', event)" title="${isPinned ? 'Unpin from My Pinned (Browser-Local)' : 'Pin to My Pinned (Browser-Local)'}" style="background:transparent;border:none;color:${isPinned ? '#fbbf24' : 'var(--text-muted)'};cursor:pointer;font-size:14px;line-height:1;padding:0 3px;transition:color 0.15s;">${isPinned ? '&#9733;' : '&#9734;'}</button>
             </div>
             <div class="company-name" title="${s.company}">${s.company}</div>
           </div>
@@ -2916,14 +3207,17 @@ function createTableHTML(stocks) {
     const tPegyType = s.peg_type || ((tDivY > 0.002) ? 'PEGY' : 'PEG');
     let tPegDisp = s.peg_display || null;
     let tPegCls = s.peg_cls || 'c-muted';
-    if (!tPegDisp && tPe) {
-      if (tTotG > 0.005) {
+    if (!tPegDisp) {
+      if (!tPe) {
+        tPegDisp = 'Neg FCF';
+        tPegCls = 'c-neg';
+      } else if (tTotG <= 0.005) {
+        tPegDisp = 'Contraction';
+        tPegCls = 'c-neg';
+      } else {
         const raw = tPe / (tTotG * 100);
         tPegDisp = raw.toFixed(2);
         tPegCls = raw < 1.0 ? 'c-pos' : (raw <= 2.0 ? 'c-prime' : 'c-neg');
-      } else {
-        tPegDisp = 'Contraction';
-        tPegCls = 'c-neg';
       }
     }
 
@@ -2979,30 +3273,49 @@ function openScannerModal() {
     ? `<button class="btn-secondary" id="btn-start-db" onclick="triggerLiveScan('current_db')">Re-Analyze Current Saved List (${savedCount} Stocks)</button>`
     : '';
 
-  const wlButtonsHTML = (watchlists && watchlists.length > 0)
+  const fullMeta = scanMeta.last_full_scan || null;
+  const secMeta = scanMeta.last_sector_scan || scanMeta.last_watchlist_scan || null;
+  const singleMeta = scanMeta.last_single_scan || null;
+
+  const singleStampHTML = singleMeta && singleMeta.timestamp
+    ? `<div style="margin-bottom:10px;font-family:var(--font-mono);font-size:11.5px;color:var(--text-secondary);">Last Single-Stock Analysis: <strong class="c-pos">${singleMeta.ticker}</strong> on <strong class="c-prime">${singleMeta.timestamp}</strong> (${fmtRelativeTime(singleMeta.epoch)})</div>`
+    : `<div style="margin-bottom:10px;font-family:var(--font-mono);font-size:11.5px;color:var(--text-muted);">Last Single-Stock Analysis: None recorded yet</div>`;
+
+  const secStampHTML = secMeta && secMeta.timestamp
+    ? `<div style="margin-bottom:10px;font-family:var(--font-mono);font-size:11.5px;color:var(--text-secondary);">Last Sector Analysis: <strong class="c-pos">${secMeta.name}</strong> (${secMeta.count || 0} stocks) on <strong class="c-prime">${secMeta.timestamp}</strong> (${fmtRelativeTime(secMeta.epoch)})</div>`
+    : `<div style="margin-bottom:10px;font-family:var(--font-mono);font-size:11.5px;color:var(--text-muted);">Last Sector Analysis: None recorded yet</div>`;
+
+  const fullStampHTML = fullMeta && fullMeta.timestamp
+    ? `<div style="margin-bottom:10px;font-family:var(--font-mono);font-size:11.5px;color:var(--text-secondary);">Last Whole Database Analysis: <strong class="c-pos">${fullMeta.count || savedCount} securities</strong> on <strong class="c-prime">${fullMeta.timestamp}</strong> (${fmtRelativeTime(fullMeta.epoch)})</div>`
+    : `<div style="margin-bottom:10px;font-family:var(--font-mono);font-size:11.5px;color:var(--text-muted);">Last Whole Database Analysis: None recorded yet</div>`;
+
+  const allSecStats = getAllSectorStats();
+  const secButtonsHTML = (allSecStats && allSecStats.length > 0)
     ? `
       <div class="verdict-panel v-mid" style="margin-bottom:16px;">
-        <div class="verdict-headline">2. Analyze a Shared Watchlist Alone</div>
-        <div class="verdict-body" style="margin-bottom:12px;">
-          <strong>Targeted Watchlist Audit:</strong> Runs the full 4-Year 10-K, Reverse DCF, OpenInsider &amp; SEC EDGAR catalyst audit on <strong>only the companies in your selected watchlist</strong> and updates the shared database.
+        <div class="verdict-headline">2. Analyze a Specific Sector Alone (~15&ndash;35 Seconds)</div>
+        <div class="verdict-body" style="margin-bottom:8px;">
+          <strong>Targeted GICS Sector Audit:</strong> Runs the full 4-Year 10-K, Reverse DCF, OpenInsider &amp; SEC EDGAR catalyst audit on <strong>all companies in the selected sector</strong> and updates the shared database in place.
         </div>
+        ${secStampHTML}
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-          ${watchlists.map(w => (w.tickers && w.tickers.length > 0)
-            ? `<button class="btn-primary" onclick="triggerLiveScan('watchlist', ${JSON.stringify(w.tickers).replace(/"/g, '&quot;')}, '${w.name.replace(/'/g, "\\'")}')"><span class="pulse-dot"></span>Analyze "${w.name}" (${w.tickers.length} Stocks)</button>`
-            : `<span class="c-muted" style="font-size:11.5px;font-family:var(--font-mono);">${w.name} (0 stocks)</span>`
-          ).join('')}
+          ${allSecStats.map(sec => {
+            const wLast = sec.lastAnalyzed || '';
+            const wSub = wLast ? ` · Last: ${wLast}` : '';
+            return `<button class="btn-secondary" style="font-size:11.5px;padding:6px 11px;" onclick="triggerLiveScan('sector', ${JSON.stringify(sec.tickers).replace(/"/g, '&quot;')}, '${sec.name.replace(/'/g, "\\'")}')" title="Analyze all ${sec.count} stocks in ${sec.name}${wSub}"><span class="pulse-dot" style="display:inline-block;margin-right:6px;"></span>${sec.name} <span class="c-muted">(${sec.count})</span>${wLast ? ` <span class="c-pos" style="font-size:10px;margin-left:4px;">[${wLast.slice(5, 16)}]</span>` : ''}</button>`;
+          }).join('')}
         </div>
       </div>
     `
     : '';
 
-  const fullSectionNum = (watchlists && watchlists.length > 0) ? '3' : '2';
+  const fullSectionNum = (allSecStats && allSecStats.length > 0) ? '3' : '2';
 
   document.getElementById('modal-content').innerHTML = `
     <div class="modal-top">
       <div>
         <div>
-          <span class="modal-ticker">Live Quantitative Screener &amp; Shared Database Engine</span>
+          <span class="modal-ticker">DaTracker — Live Quantitative Screener &amp; Shared Database Engine</span>
         </div>
         <div class="modal-pillars">
           <span>Shared Persistent Database (<strong class="c-prime">${savedCount} Stocks Saved</strong>)</span>
@@ -3015,22 +3328,24 @@ function openScannerModal() {
 
     <div class="verdict-panel v-mid" style="margin-bottom:16px;">
       <div class="verdict-headline">1. Analyze &amp; Add 1 Single Stock (~3 Seconds)</div>
-      <div class="verdict-body" style="margin-bottom:12px;">
+      <div class="verdict-body" style="margin-bottom:8px;">
         <strong>Additive single-stock deep dive:</strong> Audits any US ticker (inside or outside the S&amp;P 500) and <strong>adds it directly to the shared database without resetting the list</strong>. Automatically re-ranks Tiers and Top Basket eligibility.
       </div>
+      ${singleStampHTML}
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
         <input type="text" id="scanner-single-input" placeholder="Enter ticker symbol (e.g. RDDT, SOFI, NVDA)..." onkeydown="if(event.key==='Enter'){const v=this.value.trim();if(v)auditSingleTicker(v);}" style="background:rgba(10,13,19,0.9);border:1px solid var(--border-mid);color:var(--text-primary);font-family:var(--font-mono);font-size:12.5px;padding:8px 14px;border-radius:7px;max-width:320px;width:100%;flex:1;outline:none;box-sizing:border-box;">
         <button class="btn-primary" onclick="const v=document.getElementById('scanner-single-input').value.trim();if(v)auditSingleTicker(v);"><span class="pulse-dot"></span>Analyze &amp; Add Single Stock</button>
       </div>
     </div>
 
-    ${wlButtonsHTML}
+    ${secButtonsHTML}
 
     <div class="verdict-panel v-green" id="scan-config-panel">
       <div class="verdict-headline">${fullSectionNum}. Analyze Whole Database (Full S&amp;P 500 + All Added Stocks)</div>
-      <div class="verdict-body" style="margin-bottom:14px;">
+      <div class="verdict-body" style="margin-bottom:8px;">
         <strong>Full universe &amp; custom database audit:</strong> Audits all ~503 S&amp;P 500 companies <strong>plus every custom stock added</strong> to the shared database, updating 4-year 10-K statements, Reverse DCF valuations, OpenInsider signals, and Top Portfolio Basket weights.
       </div>
+      ${fullStampHTML}
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
         <button class="btn-primary" id="btn-start-full" onclick="triggerLiveScan('full_universe')"><span class="pulse-dot"></span>Analyze Whole Database (~500+ Stocks)</button>
         ${currentDbBtn}
@@ -3094,6 +3409,10 @@ async function triggerLiveScan(mode, customTickers=null, wlName=null) {
     if (Array.isArray(customTickers) && customTickers.length > 0) {
       bodyObj.custom_tickers = customTickers;
     }
+    if (wlName) {
+      bodyObj.sector_name = wlName;
+      bodyObj.watchlist_name = wlName;
+    }
     const res = await fetch('/api/scan/start', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -3107,7 +3426,7 @@ async function triggerLiveScan(mode, customTickers=null, wlName=null) {
     }
     if (wlName) {
       const lbl = document.getElementById('scan-stage-label');
-      if (lbl) lbl.textContent = `Auditing Watchlist "${wlName}" (${customTickers.length} stocks)...`;
+      if (lbl) lbl.textContent = `Auditing Sector "${wlName}" (${customTickers ? customTickers.length : ''} stocks)...`;
     }
     const bf = document.getElementById('btn-start-full');
     const bd = document.getElementById('btn-start-db');
@@ -3165,6 +3484,10 @@ function startPollingScan() {
           if (Array.isArray(PAYLOAD.watchlists)) {
             watchlists = PAYLOAD.watchlists;
           }
+          if (PAYLOAD.scan_meta && typeof PAYLOAD.scan_meta === 'object') {
+            scanMeta = PAYLOAD.scan_meta;
+            saveScanMetaLocal();
+          }
           populateSectorFilter();
           renderTracker();
           render();
@@ -3182,7 +3505,7 @@ function openInfoModal() {
     <div class="modal-top">
       <div>
         <div>
-          <span class="modal-ticker">System Methodology &amp; Quantitative Architecture</span>
+          <span class="modal-ticker">DaTracker — System Methodology &amp; Quantitative Architecture</span>
         </div>
         <div class="modal-pillars">
           <span>S&amp;P 500 Universe</span>
@@ -3641,7 +3964,7 @@ function openModal(ticker) {
     const rg = (prevR && prevR > 0) ? ((currR - prevR) / prevR) : 0;
     const totG = rg + mDivY;
     if (!mPe) {
-      return { txt: 'N/A', cls: 'c-muted' };
+      return { txt: (mFcfY <= 0 ? 'Negative FCF' : 'Deficit'), cls: 'c-neg' };
     }
     if (totG <= 0.005) {
       return { txt: 'Contraction', cls: 'c-neg' };
@@ -3718,17 +4041,22 @@ function openModal(ticker) {
   const dAltCls = s.altman_z != null ? (s.altman_z >= 2.99 ? 'c-pos' : (s.altman_z < 1.80 ? 'c-neg' : 'c-prime')) : 'c-prime';
   const dBenCls = s.beneish_m != null ? (s.beneish_m <= -2.00 ? 'c-pos' : (s.beneish_m > -1.78 ? 'c-neg' : 'c-prime')) : 'c-prime';
 
-  const modalWatchlistRow = (watchlists && watchlists.length > 0)
-    ? `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:10px;">
-        <span class="watchlist-label" style="margin-right:2px;">Watchlists:</span>
-        ${watchlists.map(w => {
-          const inWl = (w.tickers || []).some(t => t.toUpperCase() === s.ticker.toUpperCase());
-          const pillCls = inWl ? 'wl-pill active' : 'wl-pill';
-          const prefix = inWl ? 'In ' : '+ ';
-          return `<button class="${pillCls}" style="padding:3px 9px;font-size:11px;" onclick="toggleTickerInWatchlist('${w.id}', '${s.ticker}')">${prefix}${w.name}</button>`;
-        }).join('')}
-      </div>`
-    : '';
+  const secStats = computeSectorStats(s.sector || 'Other');
+  const fcfDiff = (s.owner_fcf_yield != null && secStats.medFCF != null) ? (s.owner_fcf_yield - secStats.medFCF) : null;
+  const roicDiff = (s.roic != null && secStats.medROIC != null) ? (s.roic - secStats.medROIC) : null;
+  const scoreDiff = (s.composite_score != null && secStats.avgScore != null) ? (s.composite_score - secStats.avgScore) : null;
+  const isPinned = isTickerPinned(s.ticker);
+
+  const modalSectorBenchRow = `
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px;font-family:var(--font-mono);font-size:11.5px;color:var(--text-secondary);">
+      <span class="watchlist-label" style="margin-right:2px;">Vs. ${s.sector} Benchmark (${secStats.count} Peers):</span>
+      <span class="tag" title="Stock Score vs Sector Average (${secStats.avgScore.toFixed(1)})">Score: <strong class="${scoreDiff != null && scoreDiff >= 0 ? 'c-pos' : 'c-neg'}" style="margin-left:4px;">${scoreDiff != null ? (scoreDiff >= 0 ? '+' : '') + scoreDiff.toFixed(1) + ' pts' : 'N/A'}</strong></span>
+      <span class="tag" title="Stock Owner FCF Yield vs Sector Median (${fmtPct(secStats.medFCF, 1)})">Cash Yield vs Peer Med: <strong class="${fcfDiff != null && fcfDiff >= 0 ? 'c-pos' : 'c-neg'}" style="margin-left:4px;">${fcfDiff != null ? fmtPct(fcfDiff, 1, true) : 'N/A'}</strong></span>
+      <span class="tag" title="Stock 3Y ROIC vs Sector Median (${fmtPct(secStats.medROIC, 1)})">3Y ROIC vs Peer Med: <strong class="${roicDiff != null && roicDiff >= 0 ? 'c-pos' : 'c-neg'}" style="margin-left:4px;">${roicDiff != null ? fmtPct(roicDiff, 1, true) : 'N/A'}</strong></span>
+      <button class="wl-pill" style="padding:3px 9px;font-size:11px;" onclick="closeModal();selectSectorFromBar('${(s.sector || '').replace(/'/g, "\\'")}')">Inspect ${s.sector} Sector &rarr;</button>
+      <button class="wl-pill" style="padding:3px 9px;font-size:11px;" onclick="runSectorAnalysis('${(s.sector || '').replace(/'/g, "\\'")}')">Audit All ${s.sector} (${secStats.count})</button>
+    </div>
+  `;
 
   const headwindSectors = ['Technology', 'Consumer Cyclical', 'Basic Materials', 'Communication Services'];
   const leadingSectors = ['Energy', 'Financial Services', 'Healthcare'];
@@ -3751,10 +4079,12 @@ function openModal(ticker) {
           <span>Quality: <strong class="${pQualCls}">${s.qual_score.toFixed(1)} / 30</strong></span>
           <span>Safety: <strong class="${pSafeCls}">${s.safe_score.toFixed(1)} / 20</strong></span>
           <span>Alignment: <strong class="${pAlnCls}">${s.align_score.toFixed(1)} / 20</strong></span>
+          <span>Last Audited: <strong class="c-prime">${s.last_analyzed || (scanMeta.last_full_scan && scanMeta.last_full_scan.timestamp ? scanMeta.last_full_scan.timestamp : 'Baseline DB')}</strong></span>
         </div>
-        ${modalWatchlistRow}
+        ${modalSectorBenchRow}
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-secondary" onclick="togglePinTicker('${s.ticker}', event)" style="${isPinned ? 'border-color:#fbbf24;color:#fbbf24;' : ''}">${isPinned ? '&#9733; Pinned' : '&#9734; Pin Stock'}</button>
         <button class="btn-secondary" onclick="auditSingleTicker('${s.ticker}')">Live Re-Audit</button>
         <button class="close-btn" onclick="closeModal()">Close [ESC]</button>
       </div>
@@ -3828,6 +4158,8 @@ document.addEventListener('keydown', e => {
 });
 
 function render() {
+  updatePinnedTabLabel();
+  renderAuditMemoryBar();
   renderWatchlistsBar();
   renderSectorBar();
 
@@ -3835,11 +4167,8 @@ function render() {
   const searchTerm = document.getElementById('search-box').value.trim().toUpperCase();
   const sortMode = document.getElementById('sort-mode').value;
 
-  const activeWl = activeWatchlistId ? watchlists.find(w => w.id === activeWatchlistId) : null;
-  const wlTickerSet = activeWl ? new Set((activeWl.tickers || []).map(t => t.toUpperCase())) : null;
-
   const basketSec = document.getElementById('basket-section');
-  basketSec.style.display = (searchTerm.length > 0 || activeWl) ? 'none' : 'block';
+  basketSec.style.display = (searchTerm.length > 0 || sectorFilter !== 'ALL' || activeSegment === 'PINNED_ONLY') ? 'none' : 'block';
 
   const basketStocks = allStocks.filter(s => s.in_basket).sort((a, b) => b.composite_score - a.composite_score);
   document.getElementById('basket-badge').textContent = `${basketStocks.length} POSITIONS · MAX 3 / SECTOR`;
@@ -3851,13 +4180,13 @@ function render() {
   }
 
   let filtered = allStocks.filter(s => {
-    if (wlTickerSet && !wlTickerSet.has(s.ticker.toUpperCase())) return false;
     if (sectorFilter !== 'ALL' && s.sector !== sectorFilter) return false;
     if (searchTerm && !s.ticker.toUpperCase().includes(searchTerm) && !s.company.toUpperCase().includes(searchTerm) && !(s.sector || '').toUpperCase().includes(searchTerm)) return false;
     if (activeSegment === 'BASKET_ONLY' && !s.in_basket) return false;
     if (activeSegment === 'ZERO_FLAGS' && (!s.data_ok || (s.red_flags && s.red_flags.length > 0))) return false;
     if (activeSegment === 'HIGH_CASH' && (s.owner_fcf_yield == null || s.owner_fcf_yield < 0.05)) return false;
     if (activeSegment === 'INSIDER_BUY' && !['CLUSTER BUY', 'CEO/CFO BUY', 'INSIDER BUY'].includes(s.insider_signal)) return false;
+    if (activeSegment === 'PINNED_ONLY' && !isTickerPinned(s.ticker)) return false;
     return true;
   });
 
@@ -3934,15 +4263,14 @@ function render() {
     return;
   }
 
-  if (activeWl && filtered.length === 0) {
-    const hasTickers = activeWl.tickers && activeWl.tickers.length > 0;
+  if (activeSegment === 'PINNED_ONLY' && filtered.length === 0) {
     dashboard.innerHTML = `
       <div class="verdict-panel v-mid" style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:8px;">
         <div>
-          <div class="verdict-headline">${hasTickers ? `Companies in "${activeWl.name}" Have Not Been Audited Yet` : `Watchlist "${activeWl.name}" Is Empty`}</div>
-          <div class="verdict-body">${hasTickers ? `Click <strong>Analyze This Watchlist Alone</strong> to run the 4-Year 10-K, Reverse DCF, OpenInsider &amp; SEC EDGAR audit on all ${activeWl.tickers.length} companies and add them to the shared database.` : `Add ticker symbols in the watchlist bar above (or from inside any stock dossier) to populate this watchlist.`}</div>
+          <div class="verdict-headline">Your Browser-Local "My Pinned" List Is Empty</div>
+          <div class="verdict-body">Click the <strong>&#9734; star icon</strong> on any stock card (or inside any stock's dossier modal) to pin companies to your private browser-local list. Pinned stocks are saved privately in your browser and are never overwritten by other visitors.</div>
         </div>
-        ${hasTickers ? `<button class="btn-primary" onclick="runWatchlistAnalysis('${activeWl.id}')"><span class="pulse-dot"></span>Analyze This Watchlist Alone (${activeWl.tickers.length} Stocks)</button>` : ''}
+        <button class="btn-secondary" onclick="setSegment('ALL')">Show All Universe</button>
       </div>
     `;
     return;
@@ -3951,7 +4279,7 @@ function render() {
   tierOrder.forEach(tier => {
     const meta = tierMeta[tier];
     const stocks = filtered.filter(s => s.tier === tier).sort(sortFn);
-    if (stocks.length === 0 && (activeSegment !== 'ALL' || activeWl)) return;
+    if (stocks.length === 0 && (activeSegment !== 'ALL' || sectorFilter !== 'ALL')) return;
 
     const sec = document.createElement('div');
     sec.className = `tier-block ${meta.css}`;
@@ -3973,11 +4301,22 @@ render();
 </html>"""
 
 
-def build_html_dashboard(stocks_payload, cohorts_payload, watchlists_payload=None):
+LOGO_PNG_B64 = "iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAB7DSURBVHic7d15tCRXfR/w72xaQCBASBwkIXpGIoA5GHAAgx0gZjuAALE4YHASE4fNCdgESFiTYMcsiW2IF8KasAohbGOUA9hBBhsbgkBJWHyMwMCMkJAALWAhgWbESMofPU96b+a9N+911723q+rzOafO00FQdX9dzf3+6nZ1dQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD03pbWAwBgU7YkOSnJziS7lv3dleSoA/+dy5N8NsknkvxVgzHSAxoAgMVz66wM9+UhP0ly5Cb2dX6SX0/ykW6HSN9pAADq257klCQnJrljbg73pW1nup+f35rkeUl+3PF+6SkNAEAZx2f1K/idSe6UaRNQ20eSnJHk+gbHZsFoAABmc0SSk3Po1fuuJKclObbd0Nb12iQvbz0I2tMAAKxuS6ZL9Ktdwe/KdOm+j3PojUl+Jsl5rQdCW3188wJ05ajcHPIHb3dNcky7oRV1TpIntB4EbWkAgCFbutnu4M/il/7evt3Qmrox0/ovbDwOGmpxEwpAl26b1a/gd2Ua/ua5Q21J8rPRAIya/2MAi+6oTL/7vtZn8bdqNrJ+u3+SM1sPgnY0AMAiWO8q/s5JtrUb2mBpnEZOAwDUMNab7RbZ/tYDoC0NANCF7Zk+3Ga1G+12ZvpQHBbLD1sPgLY0AMBGrbVMf2KmIX90u6Exgz2tB0BbGgBgyXpPtjs1yW3aDY0CdrceAG1pAGBc3GzHEisAI+dBQDAsR2b6W/FutmM9N2b6XvhR64HQjhUA6J/1ruJL/Iwsw/OdCP/R0wDA4tmS5B8kuVcOvZv+lCQ72g2NgbD8jwYAFsgdkrwwyS9muowPpWgA0ADAAtiS5FeS/Jckt2w8FsbBNwDQAEBj25K8OckzWw+EUdEAkK2tBwAj918j/KnPRwC4WxgaenySc1oPgoVxdaZX5nuW/X1Ikp8vcKxTklxcYL/0iI8AoI3tSd7QehBUtT/T0F0e8sv/+YpV/jf/sMA49iW5pMB+6RkNALTx2Ey/2sewXJGVV/DLQ/6ibP4X+Eq8R76Z5IYC+6VnNADQxpNbD4CZXJfkW7k52JdvX09yVcfHK9EAuAGQJBoAaOVnWg+ANV2atZfpL830Mbo1HJnpLy12zQ2AJNEAQAtbk9yp9SBG7Oocuky//O/edkNbYZIy39TSAJBEAwAtbInH+Zb2/ay+TL8U8rWu4udR6h4RHwGQRAMALVyf5Jr4Zb55XJnVr+B3Z3qn/Y/bDa0zOwvtVwNAEg0AtHJBkvu1HsQC25fkwqwd8j9oNrJ6SjUAPgIgiQYAWjk3GoD1lum/melKyZiV+Ajge0n+vsB+6SENALRxZpKXZdhP47wma99otzuLc7PdoiqxAuDqn5toAKCNLyf5YPr9PIDrc+iT7Zb/vazd0AbBMwAoSgMA7fxakocmuW3rgazjyqx9BX9RhnGz3SI6LsmxBfZrBYCbaACgnUsyXQH4syRHNBrD0s12a4V810+2Y2N8AwBgBB6faRDfWHn7TpJTK9TH5j0lZc75I2sWAcDhPTrTm+JqNwEXRROwiF6aMufbuQZYQJoAlrwl3Z/n/Wn3URMAh6EJIJk+J6Lrc7ynagUAbJomgK+n+/P7iaoVADATTcB4bUtyXbo/t2+vWQQAs9MEjNPOlDmvr6hZBADz0QSMz0NT5pw+rWYRAMxPEzAuz0yZ8/mAmkUA0A1NwHi8OmXO5Qk1iwCgO5qAcTgr3Z/Dq6tWAEDnNAHDd166P39fqloBAEVoAobtsnR/7j5UtQIAitEEDNMxKXPeXl+zCADK0gQMz0+mzDl7fs0iAChPEzAsT0iZ8/XYmkUAUIcmYDhemDLn6idqFgFAPZqAYfj9dH+Obkhyi5pFAFDXGUn2pX4T8LUkt6tQ3xh8ON2fn0urVgBAE62agI8l2VKhvqH7cro/N5+uWgEAzTwmbT4O+Cc1ihuwLUl+mO7Py3tqFgFAWy1WAi6oUtlwnZgy5+U3ahZBf2xtPQCgiHOSPDHTJqCWuyW5Z8XjDc2uQvvdXWi/9JwGAIbro0memuS6isd8VMVjDc3OQvvVALAqDQAMW+2VgFIhNgZWAKhKAwDD99EkL650LL85P7sSzdO++Boga9AAwPBNkryo0rG+X+k4Q1RiBeDCTB8EBIfQAMCwnZbkrzNtAmq4pNJxhqjECsCeAvtkIDQAMFyTJOcmObniMf+y4rGG5KhMvwbYNZ//syYNAAxT7Sv/JLkyyacqHm9I7pwy87EVANakAYDhmaT+lX+S/FaS/ZWPORS+AQDAXE5LcnHqPwZ4d/zi3Dz+Vcqcl/vULIJ+sQIAwzFJmyv/azP9HYAfVT7ukJRaAfARAMDAtbry35vpjw8xnz9O9+fmyqoVAFDdJNMrvdrhvy/J48uXNwqfT/fn5/yqFQBQ1STCfwiuSvfn6OyqFQBQzSTCfwhunzLn6bU1iwCgjkmE/1DcL2XO1bNrFgFAeZMI/yF5asqcr0fULAKAsiYR/kPzspQ5Z6fWLAKAciYR/kP01nR/zvYn2VGzCADKmET4D9W56f687alaAQBFTCL8h+wb6f7cfbxqBQB0bhLhP2Tbk1yX7s/f22oWAUC3JhH+Q7czZc7hy2sWAUB3JhH+Y/CwlDmPT6tZBADdmET4j8WzUuZc/nTNIgCY3yTCf0xekzLn8/iaRQAwn0mE/9icle7P59VVKwBgLpMI/zH6bLo/p1+sWgEAM5tE+I/V5en+vH6oagUAzGQS4T9Wt0qZc/v6mkUAsHmTCP8xu1fKnN/n1ywCgM2ZRPiP3RNS5hyfXrMIADZuEuFP8sKUOc93r1kEABszifBn6vfT/Xm+IcktahYBwOFNIvy52UfS/bm+pGoFABzWJMKflS5I9+f7U1UrAGBdkwh/VtqS5Efp/py/u2YRAKxtEuHPoU5KmfP+qoo1ALCGSYQ/q/tHKXPuf6lmEQAcahLhz9r+ecqc/wfXLAKAlSYR/qzvVSnzHji5Yg0ALDOJ8Ofw3pXu3wN7k2ytWQQAU5MIfzbmr9L9++ArVSsAIInwZ3O+le7fCx+tWgEAwp9NOSrJ9en+/fAHNYsAGLtJhD+bc7eUeU+8qGYRAGM2ifBn8x6TMu+LJ9UsAmCsJhH+zOZ5KfPeuHfNIui/7a0HAD10WpK/SP3vXO9L8uRMf0WO2f1UkscleWCSE5MckeSyJF/N9LX9X0muLXj8nYX2u6fQfgHINPwvTv0r/71JTq9Q35A9MMlf5vCv9XeSPD/JjkLj+OAGxrDZ7YpCYwUglv377NeS7M/mXvdPJblDgbF8YZPj2Mj2uQLjBCCu/Ptqa5K3Z/bXf0+6X7K/ao7xrLWd3fEYAYgr/77akuRNmf88XJTk1I7GdPsOxrPa9tqOxgfAAZMI/z7qKvy7bgLu3+GYlm/P7mBsABwwifDvo67Dv8sm4BcKjOvGJA+fc1wAHDCJ8O+jUuHfVRPwskLj2jXHmAA4YBLh30dbkrw55c/TPE3AWwuMZ3/KfWURYDQmEf59VCv8520C/rzAWHbPMA4AlplE+PdR7fCfpwnYXWAcH9/kGABYZhLh30etwn+WJmB7kusKjOFtGzw+AAeZRPj3Uevw32wTsKvQ8V++0RcMgJtNIvz7aFHCfzNNwMMKHfsXNv6yAZAI/75atPDfaBPwrELHvf9mXjyAsZtE+PfRoob/RpqA1xQ65vGbewkBxmsS4d9Hix7+h2sC3l/gWFdv+lUEGKlJhH8f9SX812sCPlfgOF+c4bUEGJ1JhH8fbU3yzrQP9XmbgMsLHONPZnlBAcZkEuHfR30N/4ObgFsV2v/vzPzKAozAJMK/j/oe/subgCcV2vfzZn1xAYbutCQXp/6kvzfJ6RXqG6qtSd6R9uHd1bav0H69xwBWMYkr/z4aypV/je3us73EAMM1ifDvI+G/8e2GJEfP9CoDDNQkwr+PhP/mtktmepUBBmoS4d9Hwn/z21/P8kIDDNEkwr+PWob/H2Z67vY2Ov4827tmeK0BBmcS4d9HrcN/+4FxPDr9awJetbmXGmB4JhH+fbQo4b+kb03AL230hQYYokmEfx8tWvgv6VMT8KDDvsoAAzWJ8O+jluH/gawd/kv60gScdJg6AAZpEuHfR4se/ksWvQm49sBrCTAqkwj/PupL+C9Z5Cbggk3WAtB7kwj/Pupb+C9Z1CbgIzPWA9BLkwj/Pupr+C9ZxCbgD+asCaA3JhH+fdT38F+yaE3AizqqC2ChnZjpb6rXnmT9pO98Wob/+9Nd+C85I+V+1nez2xM7rg1g4RyV5DOpP8G68p/PUK78D7YoKwH3KlQfwMJ4ZYR/3ww1/JcsQhNw68I1AjR1myTfT92J1bL/fLZm+iM1LULxrJQP/yUtPw64okJ9AE39cupOrK785zP0K/+DPSZtVgI+V6M4gJb+KPUmVVf+89mWcVz5H6zFSsDZVSoDaOjLqTOhuvKfz9iu/A9WeyXgNXXKAmjnypSfTK+PK/95jPXK/2A1VwKeVakmgGa+nToT6m/XKmhgxn7lf7BaKwEPq1UQQCufT71AeW2lmoai9ZX/tvIlzqTGSsCkVjEArbw5dYPFSsDGtAz/RbzyP1jJlYArk2ypVwpAG49N/YCxErA+V/4bU2ol4KyaRQC0sj3JV6IJWBTbkrw7wn+jSjQBj6xaAUBDP582gaMJWKll+L8v/Qv/JV02AZ+sPHaA5mrfC6AJWEn4z6eLJuDqJHepPXCA1nYk+Vg0AS0I/26ckdlvDNyX5FH1hwywGI6OJqA24d+tByf5bjb3OlyW5CEtBguwSDQB9Qj/Mo5L8qYcfjVgb5K3JDm+zTABFo8moDzhX94JSZ6d5Mwk5yX5mwN/z0zy3AP/HoCDHJnkw2kTUEN/WFDL7/mfncV/yA8AjWkCuif8AegFTUB3hD8AvaIJmJ/wB6CXNAGzE/4A9JomYPOEPwCDoAnYOOEPwKBoAg5P+AMwSJqAtQl/AAZNE3Ao4Q/AKGgCbtby8b7CH4DqWv52wGsq1LcR25K8J21egzNT7tn+t8m0yQOAVbVsAp5Vob71DCn875vpysoFWflrepcn+VCSf5HpuQaAm7RqAvYluXeF+lYzlPDfleSDSW7YwHEvTvKMjo4LwEC0uifgozWKO8hQPvN/UJLLZhjDmbEaAMAyrVYC7lWjuAOGcuX/4ExXUGYdy8eiCQBgmRZNwL+vUtk0fN9bqaaDt/emu/A/ObNd+WsCAFhX7Sbg3Ao1DSX8k+SdHY5NEwDACjWbgC8XrmVI4X+XJPs7HqMmAIAVajUBFxesYUjhnyQvKTRWTQAAK9RoAv5vobEPLfyT5BMFx6wJAGCF0k3ABwqMeYjhnyTfKDx2TQAAK5RsAn6547EONfyT5AcVatAEALBCiSbgmiTHdzjGIYd/Mr1fokYtmgAAVui6CejyR4GGHv5Jcl7FmjQBAKzQVRPwd0mO7WhMYwj/JHldpZo0AQCsat4m4O+T3L2jsWzL9DG7LcL/PakX/knywEJ1aAIA2LDtSX4vmw+Ui5L8VEdjaPnDPu9Pdz/ssxl/PuN459k+meSWNYoDoD+enmR3Dh8i+5K8MclxHR13TFf+y903yXUbGGPXm5UAAA5xRJKnZhqMu5P8KMn1Sb6d6dXjS5JMOjzeWMN/yXPTpnZNAACHtaXQfsce/kteG00AACOxLdMQbhF8rT7zX89/SpvXwj0BAFQj/FenCQBgsIT/+jQBAAyO8N8YTQAAgyH8N0cTAEDvCf/ZaAIA6C3hPx9NAAC9I/y7oQkAoDeEf7c0AQAsPOFfhiYAgIXVMvzPynDDf4kmAGDB3CHJryQ5O8n5Sf4uyXlJ3pfkOQf+/dBty7TeFgH17izOs/1L89sBAAvghCRvz/QnctebPPcmeUuS27cZZnHCvy5NAEBDD09yeTY3gX43yYNbDLYg4d+GJgCggdOTXJfZJtC9Sc6oP+QihH9bLZuAHRXqA1god01yTeabQPel/02A8F8MrZqAN9UoDmCRfCrdTKB9bgKE/2Jp1QQ8sUZxAIvgUel2Au1jE7At06/cCf/F0qIJuCDD/+olQJLp1/y6nkT71AS0DP93RfgfTosm4NFVKgNoaEuSK1NmEr0uyRPqlTITD/nph9oPC/pvdcoCaGdnyk6ki7wS4Mq/X2quBJxfqSaAZh6R8pPpIq4EtL7yF/6zqbUScEmtggBaeVbqTKiLtBKwPa78++r0JNen/Hm6vFZBAK3UXFZdhJUAV/799agk16bOufpipZoAminxDYD1tpYrAa78++v0TJ82Wet8nV2nLIB2zk/9MGyxEuDKv79qXvkvbf+0SmUADV2RNqFYcyWg9ZX/1vIlDlbtK/8bk3wvybE1igNo5dZpE4pLW42VgG1J3tuoPlf+82lx5X9jkn9boziAlu6dtg3AjSm7EuDKv79aXPnfmOQzSY6sUB9AU09K+wagVBOwPcn7G9Xzzgj/ebQK/4uS3LFCfQDNvTjtw39p6/LjAMv+/dVq2f/iJKdVqA9gIbwx7YO/6yZA+PeX8Aeo5E/TPvS7bAKEf38Jf4CKvpL2gd9VEyD8+0v4A1S0NW0m3RJNgPDvL+EPUNnJaR/yXTQBwr+/hD9AAw9O+4CftwkQ/v0l/AEaeUbah/s8TYDw7y/hD9DQr6d9sM/aBLQM/3fEQ37mIfwBGnt32of6Zrd9mT690BP++qnVE/6EP8Ayn0r7QO/T9o4I/3m48gdYEJemfaj2ZRP+8xH+AAvi6CQ3pH2w9mET/vMR/gAL5CfSPlj7sAn/+Qh/gAVzespMvPsK7Vf4948b/gAW0PNTZvJ9XJLdhfYt/PvDlT/Agnp9ykzAt05ySvrdBAj/+Qh/gAX2oXQ/AV+2bP99bQKE/3yEP8CC+1K6n4Q/e9Ax+tYE/I8I/3kIf4Ae+EG6n4jPWuU4fWkChP98hD9AD5yQMpPxq9c43qI3AcJ/PsIfoCcekDIT8jPXOeaiNgHCfz7CH6BHnpYyk/JDD3PcRWsChP98hD9Az7wiZSbmnRs49qI0AcJ/PsIfoIfenu4n5h8n2b7B47duAoT/fIQ/QE99It1Pzt/Y5BhaNQHCfz7CH6DH9qT7CfrcGcZRuwkQ/vMR/gA9tiPJ/nQ/Sb9lxvHUagKE/3yEP0DPnZoyE/VL5xhT6SZA+M9H+AMMwCNSZrJ+6pzjKtUECP/5CH+AgXhOykzY9+tgbF03AcJ/PsIfYEBelzKT9nEdja+rJkD4z0f4AwzM2el+0r6q4zHuzHzfVHhbhP88Tk+yN8IfYFDOT/cT9+cLjPO4bP55BfuTvCTJlgLjGQtX/gADdUW6n7w/WGisO5I8L8m3NzCGjye5f6FxjIUrf4CBOjZlJvDfKTzuo5OckeTNST6Z5IIkX0jykSSvTHKfwscfA+EPMGD3SZlJ/F/XLILOWfYHGLgnp8xE/uiaRdAp4Q8wAi9Omcn8rjWLoDPCH2Ak3pjuJ/MbkhxVswg6IfwBRuRPU2ZCp1+EP8DIfDXdT+qfrFoB8xL+ACOzNWW+5vXOijUwH+EPMEJ3SpnJ/T/WLIKZCX+AkXpIykzw/6xmEcxE+AOM2DNSZpL/2Yo1sHnCH2Dkfj1lJvoTaxbBpgh/APKedD/RXxu/vLeohD8ASZJPp/vJ/stVK2CjhD8AN7k03U/4H65aARsh/AG4ydGZPrK360n/92oWwWEJfwBWuEfKTPz/pmYRrEv4A3CIx6bM5H9GzSJYk/AHYFW/mjIB8JM1i2BVwh+ANb0hZULgVjWL4BDCH4B1nZPuQ+CyqhVwMOEPwGF9Kd0HwXlVK2A54Q/Ahlyd7sPgfVUrYInwB2BDTkiZQHh1zSJIIvwB2IQHpEwoPLNmEQh/ADbn6SkTDA+tWcTICX8ANu0VKRMOk4o1jJnwB2Amb0/34fDjJNtrFjFSwh+AmX0i3QfE16tWME7CH4C5XJjuQ+JjNQsYIeEPwFx2JNmf7oPiLTWLGBnhD8DcTkuZsHhpzSJGRPgD0IlHpkxgPKVmESMh/AHozHNSJjTuW7OIERD+AHTqdSkTHMfVLGLghD8AnftAug+Oq6pWMGzCH4Ai/k+6D4//V7WC4RL+ABRzZboPkD+uWsEwnZ5kb4Q/AAUcmzIh8ls1ixigeyW5JsIfmMPW1gNgoe0qtN89hfY7BsckOSfJLSsf91tJfi4e4QyDoQFgPaUagN2F9jsGL0hy58rHFP4AI/PilFlKvmvNIgbkiCTfi2V/oANWAFhPiRWAGzL9cSE27x8nuW3F47nyhwHTALCenQX2eWmSfQX2OwYPqXgs4Q8DpwFgPSVWAHz+P7uTKh1H+MMIaABYy9aUudnMNwBmd+tKx/nPEf4weBoA1nJSkiML7NcKwOwur3Sc1yd5QqVjAY1oAFiLZwAsnlqv3Y4kZyc5o9LxgAY0AKzFMwAWz59VPNYRSf4wVgJgsDQArKXENwASKwDz+GKSr1Y8npUAgBF6b7p/qMyPkmypWcQAPS31fwPgulgJABiNT6f7IPnbqhUM09Yk56Z+E7AvmgCAUbg03YfIh6tWMFy3S/K1aAIA6NjRmT6yt+sA+d2aRQzcKZneUFm7CfBxAMCA3SNlwuMFNYsYAU0AAJ16XMoEh7vJu6cJAKAzv5oyoXHPmkWMiCYAgE68IWUC45iaRYyMJgCAuZ2T7oPiu1UrGKeWTcATK9QHQGF/k+5D4jNVKxgvTQAAM7s63QfE+6pWMG6aAAA27Q4pEw6/WbMINAEAbM4DUyYY/mXNIkiiCQBgE56eMqHwczWL4CaaAAA25JUpEwh3rlkEK2gCADis/54yQbCtZhEcQhMAwLr+It2HwNeqVsBaNAEArOnCdB8AH6tZAOvSBABwiB1J9qf7yf/NNYvgsDQBAKxwl5SZ+F9Sswg2RBMAwE0emTKT/lNqFsGGnZrkO2nTBPgBIWhse+sBsFB2Ftrv7kL75fCOTbIr03N78N9JkiMbjGlHkrOTPCbJxxscH4gGgJV2FdrvnkL7ZRqmp2T1kN+V5HbthrauI5L8UZJ7JvlW47HAKGkAWK7ECsBVSa4ssN8xOSGrh/vOJHdKf5+xcJskv5vkya0HAmOkAWC5EisAlv8P76isHu5Lf49pN7TinpjkHkn+tvVAYGw0ACynASjntrk53A/eJkm2NhtZW1uS/GKSl7ceCIyNBoAlt8k0pLo2ls//j83ay/STtLnZri8eHg0AVKcBYIkbANe33s12O5Mc125ovXe31gOAMdIAsKRUA9CnjwDWW6Y/Jf7/UsqtMv0I5IbWA4ExMaGxZAzPADj4ZruD/w75ZrtFdl3rAcAYaQBYUqIBuCHJNwvsdy1bkpyUtb8Tf8eKY2HjLoqrf6hOA8CSEh8BXJJkX8f7PCrJiVl9mf5uSW7Z8fEo79OtBwBjpAFgSYkVgFluAFy62W6tZXo32w3Pn7QeAIyRBoBkegPWnQvsd63P/4/P2g++OTnel2PytSQfbj0IGCMTLcn0c/MS31M/Jsnz42Y71vaCJNe3HgTAWD0k9X8S1mb77QDNjPXxo6xU6hkAsJa3Jvl3rQcBY6YBICn3DAA42NVJnpvkOfHVP2jKPQAkVgAo7+Ik703yhiSXNx4LEA0AU1YA6MKPM32oz55MvwGy9PcLmd7tf2O7oQEH0wCQWAFg476faaivtl2UZH+7oQGbsaX1AGjuFkmuifcCU9cl+VZWD/ivJ7mq3dCALlkBYFeE/9isdxV/YdycB6OgAcDn/8OzN8mlWT3gv5Lkh+2GBiwKDQA+/++f/ZneSb9WyO+JG+6Aw9AAMGk9AFZ1eQ69m37p78Vxsx0wJw0At2o9gJFysx3QlAaAHa0HMGButgMWlgYAV5qzuzorl+aX//OFmd6MB7CQNAB8rvUAFtx6V/FutgN6SwPApzMNsbE+C+CKrH6j3Z54sh0wYGOd9FnpfyZ5XOtBFOJmO4BVaABIkgck+d/p5/vhxiTfztqfxV8ay/QAh+jjhE8Zr0nystaDWMN6T7b7aqa/ZQDAJmgAWLItyTlJTm9w7P2ZPtxmtSv4PfH78QCd0wCw3PYkv5nkJQX2vdbd9EvL99cWOCYAa9AAsJrTk/yHJPffxP9mX6bffV/tCn53kh90O0QA5qEBYD0PSvLQJD+d5IQD/9nerB7yl8TNdgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9fx/I/XhNzpWsokAAAAASUVORK5CYII="
+
+ICON_ICO_B64 = "AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAABAAAMMOAADDDgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAUQAAAFwAAABAAAAAKQAAABcAAAAKAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYAAADVAAAA9AAAAOcAAADkAAAA2AAAAMQAAACqAAAAjAAAAGwAAABFAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAAMYAAACfAAAANQAAAFIAAABvAAAAjgAAAKoAAADPAAAA/gAAANkAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAArQAAAKcAAAABAAAAAAAAAAAAAAAAAAAADgAAAJoAAADpAAAAXgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAAAwgAAAAkAAAAAAAAAAAAAAAAAAAA7AAAA8gAAAJ8AAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEAAADXAAAAFgAAAAAAAAAAAAAAAAAAAAoAAACJAAAA6QAAAGYAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVAAAAOQAAAAoAAAAAAAAAAEAAAAAAAAAAAAAAAoAAACJAAAA6wAAAGYAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5AAAA5wAAAEwAAAB8AAAAbgAAAAYAAAAAAAAAAAAAAAoAAACKAAAA6wAAAGYAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAADgAAAA0gAAAPAAAADvAAAAdwAAAAYAAAAAAAAAAAAAAAoAAACJAAAA6wAAAGYAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEwAAANIAAADwAAAAYgAAAHgAAADtAAAAeAAAAAYAAAAAAAAAAAAAAAkAAACNAAAA7wAAAFUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAbwAAAFgAAAACAAAABAAAAHYAAADtAAAAeAAAAAYAAAAAAAAACgAAAI8AAADuAAAAUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAABTAAAAUQAAAHcAAADtAAAAeAAAAAQAAAB3AAAA7AAAAGMAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAYwAAAOwAAAB3AAAABAAAAHgAAADtAAAAdwAAAFIAAABUAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFMAAADuAAAAjwAAAAoAAAAAAAAABgAAAHgAAADtAAAAdgAAAAQAAAACAAAAWAAAAG8AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVQAAAO8AAACNAAAACQAAAAAAAAAAAAAABgAAAHgAAADtAAAAeAAAAGEAAADvAAAA0QAAABMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAZgAAAOsAAACKAAAACgAAAAAAAAAAAAAABgAAAHcAAADvAAAA8AAAANIAAADgAAAAJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAZgAAAOsAAACKAAAACgAAAAAAAAAAAAAABgAAAG4AAAB8AAAATAAAAOcAAAA5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAZgAAAOsAAACKAAAACgAAAAAAAAAAAAAAAQAAAAAAAAAoAAAA5AAAAFQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAZgAAAOkAAACJAAAACgAAAAAAAAAAAAAAAAAAABYAAADXAAAAcQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAnwAAAPIAAAA6AAAAAAAAAAAAAAAAAAAACQAAAMIAAACQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAF0AAADpAAAAmgAAAA4AAAAAAAAAAAAAAAAAAAABAAAApwAAAK0AAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA2QAAAP4AAADPAAAAqgAAAI4AAABwAAAAUgAAADUAAACfAAAAxgAAAAsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAABFAAAAawAAAIsAAACpAAAAwwAAANgAAADkAAAA5wAAAPQAAADVAAAAFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAKAAAAFwAAACkAAABAAAAAXAAAAFEAAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//////////////////////4B///+AB///gAf//4cH///HD///xwf//8WD///Awf//wGD//8Aw///AEP//+AD///AB///wgD//8MA///BgP//4MD///Bo///4OP///Dj///g4f//4AH//+AB///+Af/////////////////////8="
+
+
+def build_html_dashboard(stocks_payload, cohorts_payload, watchlists_payload=None, scan_meta_payload=None):
     payload = {
         'stocks': stocks_payload,
         'cohorts': cohorts_payload,
         'watchlists': watchlists_payload if watchlists_payload is not None else [],
+        'scan_meta': scan_meta_payload if scan_meta_payload is not None else {},
     }
     json_str = json.dumps(payload)
-    return HTML_TEMPLATE.replace("__PAYLOAD_JSON__", json_str)
+    return (
+        HTML_TEMPLATE
+        .replace("__PAYLOAD_JSON__", json_str)
+        .replace("__LOGO_PNG_B64__", LOGO_PNG_B64)
+        .replace("__ICON_ICO_B64__", ICON_ICO_B64)
+    )
