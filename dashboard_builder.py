@@ -4366,11 +4366,45 @@ function openLegalModal(tab) {
         </ul>
       </div>
       <div class="verdict-panel v-mid">
-        <div class="verdict-headline">Get in Touch for Ad Rates &amp; Media Kit</div>
-        <div class="verdict-body">
-          For sponsorship availability, custom integrations, or advertising inquiries on <strong>datracker.net</strong>, contact us directly at:<br><br>
-          <a href="mailto:contact@datracker.net?subject=DaTracker%20Advertising%20%2F%20Partnership%20Inquiry" class="btn-primary" style="text-decoration:none;display:inline-flex;margin-top:4px;">Email: contact@datracker.net</a>
+        <div class="verdict-headline">Send an Advertising or Partnership Inquiry</div>
+        <div class="verdict-body" style="margin-bottom:14px;">
+          Fill out the form below and your inquiry will be delivered directly to our partnerships desk:
         </div>
+        <form id="partner-contact-form" onsubmit="submitPartnerForm(event)" style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;">
+            <div>
+              <label style="display:block;font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;">Your Name *</label>
+              <input type="text" id="pf-name" name="name" required placeholder="Jane Doe" style="width:100%;background:rgba(10,13,19,0.9);border:1px solid var(--border-mid);color:var(--text-primary);font-family:var(--font-sans);font-size:13px;padding:9px 12px;border-radius:7px;outline:none;">
+            </div>
+            <div>
+              <label style="display:block;font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;">Company / Brand *</label>
+              <input type="text" id="pf-company" name="company" required placeholder="Acme Fintech / Brokerage" style="width:100%;background:rgba(10,13,19,0.9);border:1px solid var(--border-mid);color:var(--text-primary);font-family:var(--font-sans);font-size:13px;padding:9px 12px;border-radius:7px;outline:none;">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;">
+            <div>
+              <label style="display:block;font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;">Your Reply Email *</label>
+              <input type="email" id="pf-email" name="email" required placeholder="jane@company.com" style="width:100%;background:rgba(10,13,19,0.9);border:1px solid var(--border-mid);color:var(--text-primary);font-family:var(--font-sans);font-size:13px;padding:9px 12px;border-radius:7px;outline:none;">
+            </div>
+            <div>
+              <label style="display:block;font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;">Partnership Type</label>
+              <select id="pf-type" name="partnership_type" style="width:100%;background:rgba(10,13,19,0.9);border:1px solid var(--border-mid);color:var(--text-primary);font-family:var(--font-sans);font-size:13px;padding:9px 12px;border-radius:7px;outline:none;">
+                <option value="Dashboard Sponsor Banner">1. Masthead / Dashboard Sponsor Banner</option>
+                <option value="Stock Dossier Integration">2. Stock Dossier &amp; Chart Integration Partner</option>
+                <option value="Fintech / API / Co-Branded Partnership">3. Featured Fintech / Research Partnership</option>
+                <option value="General Inquiry / Other">4. General Inquiry / Other</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label style="display:block;font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;">Message / Campaign Details *</label>
+            <textarea id="pf-message" name="message" required rows="4" placeholder="Tell us about your brand, campaign goals, desired placement, or timeline..." style="width:100%;background:rgba(10,13,19,0.9);border:1px solid var(--border-mid);color:var(--text-primary);font-family:var(--font-sans);font-size:13px;padding:10px 12px;border-radius:7px;outline:none;resize:vertical;"></textarea>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px;">
+            <button type="submit" class="btn-primary" id="pf-submit-btn"><span class="pulse-dot"></span>Send Partnership Inquiry</button>
+            <span id="pf-status-msg" style="font-family:var(--font-mono);font-size:12px;"></span>
+          </div>
+        </form>
       </div>
     ` : ''}
 
@@ -4437,6 +4471,65 @@ function openLegalModal(tab) {
     ` : ''}
   `;
   document.getElementById('modal-backdrop').style.display = 'flex';
+}
+
+async function submitPartnerForm(ev) {
+  if (ev) ev.preventDefault();
+  const btn = document.getElementById('pf-submit-btn');
+  const statusEl = document.getElementById('pf-status-msg');
+  const name = (document.getElementById('pf-name')?.value || '').trim();
+  const company = (document.getElementById('pf-company')?.value || '').trim();
+  const email = (document.getElementById('pf-email')?.value || '').trim();
+  const ptype = (document.getElementById('pf-type')?.value || '').trim();
+  const message = (document.getElementById('pf-message')?.value || '').trim();
+
+  if (!name || !email || !message) return;
+
+  if (btn) btn.disabled = true;
+  if (statusEl) {
+    statusEl.className = 'c-prime';
+    statusEl.textContent = 'Sending inquiry...';
+  }
+
+  try {
+    const res = await fetch('https://formsubmit.co/ajax/Gabriel.cacoilo@gmail.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        _subject: `[DaTracker Ad/Partner Inquiry] ${company} — ${name}`,
+        Name: name,
+        Company: company,
+        Reply_Email: email,
+        Partnership_Type: ptype,
+        Message: message,
+        _template: 'table'
+      })
+    });
+    const data = await res.json();
+    if (res.ok && (data.success === 'true' || data.success === true)) {
+      if (statusEl) {
+        statusEl.className = 'c-pos';
+        statusEl.textContent = 'Inquiry sent! We will get back to you shortly.';
+      }
+      const form = document.getElementById('partner-contact-form');
+      if (form) form.reset();
+    } else {
+      throw new Error((data && data.message) || 'Submission error');
+    }
+  } catch (err) {
+    const subj = encodeURIComponent(`[DaTracker Ad/Partner Inquiry] ${company} — ${name}`);
+    const body = encodeURIComponent(`Name: ${name}\nCompany: ${company}\nReply Email: ${email}\nPartnership Type: ${ptype}\n\nMessage:\n${message}`);
+    window.location.href = `mailto:Gabriel.cacoilo@gmail.com?subject=${subj}&body=${body}`;
+    if (statusEl) {
+      statusEl.className = 'c-pos';
+      statusEl.textContent = 'Opened your email client to send directly.';
+    }
+  } finally {
+    if (btn) btn.disabled = false;
+  }
 }
 
 renderTracker();
