@@ -2176,7 +2176,6 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       <div class="seg-group" id="segment-tabs">
         <button class="seg-btn active" data-filter="ALL" onclick="setSegment('ALL')">All Universe</button>
         <button class="seg-btn" data-filter="BASKET_ONLY" onclick="setSegment('BASKET_ONLY')">Portfolio Basket</button>
-        <button class="seg-btn" data-filter="PINNED_ONLY" id="seg-btn-pinned" onclick="setSegment('PINNED_ONLY')">&#9733; My Pinned (0)</button>
         <button class="seg-btn" data-filter="ZERO_FLAGS" onclick="setSegment('ZERO_FLAGS')">Clean 10-K (Zero Flags)</button>
         <button class="seg-btn" data-filter="HIGH_CASH" onclick="setSegment('HIGH_CASH')">High Cash Yield (&ge;5%)</button>
         <button class="seg-btn" data-filter="INSIDER_BUY" onclick="setSegment('INSIDER_BUY')">Net Insider Buying</button>
@@ -2239,11 +2238,8 @@ let allStocks = PAYLOAD.stocks || [];
 let cohorts = PAYLOAD.cohorts || [];
 let watchlists = PAYLOAD.watchlists || [];
 let scanMeta = PAYLOAD.scan_meta || {};
-let pinnedTickers = [];
 try {
   if (window.localStorage) {
-    const cachedPins = localStorage.getItem('datracker_pinned_tickers');
-    if (cachedPins) pinnedTickers = JSON.parse(cachedPins) || [];
     const cachedMeta = localStorage.getItem('datracker_scan_meta');
     if (cachedMeta) {
       const parsed = JSON.parse(cachedMeta);
@@ -2261,43 +2257,6 @@ try {
     }
   }
 } catch (e) {}
-
-function isTickerPinned(ticker) {
-  const up = String(ticker || '').toUpperCase();
-  return pinnedTickers.includes(up);
-}
-
-function updatePinnedTabLabel() {
-  const btn = document.getElementById('seg-btn-pinned');
-  if (btn) {
-    btn.innerHTML = `&#9733; My Pinned (${pinnedTickers.length})`;
-  }
-}
-
-function togglePinTicker(ticker, ev) {
-  if (ev) ev.stopPropagation();
-  const up = String(ticker || '').toUpperCase();
-  if (!up) return;
-  if (pinnedTickers.includes(up)) {
-    pinnedTickers = pinnedTickers.filter(t => t !== up);
-  } else {
-    pinnedTickers.push(up);
-  }
-  try {
-    if (window.localStorage) {
-      localStorage.setItem('datracker_pinned_tickers', JSON.stringify(pinnedTickers));
-    }
-  } catch (e) {}
-  updatePinnedTabLabel();
-  render();
-  const modalEl = document.getElementById('modal-backdrop');
-  if (modalEl && modalEl.style.display === 'flex') {
-    const cur = allStocks.find(s => s.ticker.toUpperCase() === up);
-    if (cur && document.querySelector('.modal-ticker') && document.querySelector('.modal-ticker').textContent === cur.ticker) {
-      openModal(cur.ticker);
-    }
-  }
-}
 
 function saveScanMetaLocal() {
   PAYLOAD.scan_meta = scanMeta;
@@ -3120,8 +3079,6 @@ function createCardHTML(s) {
     pegyCls = 'c-neg';
   }
 
-  const isPinned = isTickerPinned(s.ticker);
-
   return `
     <div class="stock-card ${s.in_basket ? 'in-basket' : ''}" onclick="openModal('${s.ticker}')">
       <div>
@@ -3130,7 +3087,6 @@ function createCardHTML(s) {
             <div class="ticker-row">
               <span class="ticker">${s.ticker}</span>
               <span class="sector-tag ${secRegimeCls}">${s.sector}${secBadge}</span>
-              <button onclick="togglePinTicker('${s.ticker}', event)" title="${isPinned ? 'Unpin from My Pinned (Browser-Local)' : 'Pin to My Pinned (Browser-Local)'}" style="background:transparent;border:none;color:${isPinned ? '#fbbf24' : 'var(--text-muted)'};cursor:pointer;font-size:14px;line-height:1;padding:0 3px;transition:color 0.15s;">${isPinned ? '&#9733;' : '&#9734;'}</button>
             </div>
             <div class="company-name" title="${s.company}">${s.company}</div>
           </div>
@@ -4054,7 +4010,6 @@ function openModal(ticker) {
   const fcfDiff = (s.owner_fcf_yield != null && secStats.medFCF != null) ? (s.owner_fcf_yield - secStats.medFCF) : null;
   const roicDiff = (s.roic != null && secStats.medROIC != null) ? (s.roic - secStats.medROIC) : null;
   const scoreDiff = (s.composite_score != null && secStats.avgScore != null) ? (s.composite_score - secStats.avgScore) : null;
-  const isPinned = isTickerPinned(s.ticker);
 
   const modalSectorBenchRow = `
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px;font-family:var(--font-mono);font-size:11.5px;color:var(--text-secondary);">
@@ -4098,7 +4053,6 @@ function openModal(ticker) {
       </div>
       <div style="display:flex;flex-direction:column;gap:7px;align-items:stretch;flex-shrink:0;min-width:126px;">
         <button class="close-btn" onclick="closeModal()" style="width:100%;text-align:center;justify-content:center;white-space:nowrap;">Close [ESC]</button>
-        <button class="btn-secondary" onclick="togglePinTicker('${s.ticker}', event)" style="width:100%;justify-content:center;white-space:nowrap;${isPinned ? 'border-color:#fbbf24;color:#fbbf24;' : ''}">${isPinned ? '&#9733; Pinned' : '&#9734; Pin Stock'}</button>
         <button class="btn-secondary" onclick="auditSingleTicker('${s.ticker}')" style="width:100%;justify-content:center;white-space:nowrap;">Live Re-Audit</button>
       </div>
     </div>
@@ -4171,7 +4125,6 @@ document.addEventListener('keydown', e => {
 });
 
 function render() {
-  updatePinnedTabLabel();
   renderAuditMemoryBar();
   renderWatchlistsBar();
   renderSectorBar();
@@ -4181,7 +4134,7 @@ function render() {
   const sortMode = document.getElementById('sort-mode').value;
 
   const basketSec = document.getElementById('basket-section');
-  basketSec.style.display = (searchTerm.length > 0 || sectorFilter !== 'ALL' || activeSegment === 'PINNED_ONLY') ? 'none' : 'block';
+  basketSec.style.display = (searchTerm.length > 0 || sectorFilter !== 'ALL') ? 'none' : 'block';
 
   const basketStocks = allStocks.filter(s => s.in_basket).sort((a, b) => b.composite_score - a.composite_score);
   document.getElementById('basket-badge').textContent = `${basketStocks.length} POSITIONS · MAX 3 / SECTOR`;
@@ -4199,7 +4152,6 @@ function render() {
     if (activeSegment === 'ZERO_FLAGS' && (!s.data_ok || (s.red_flags && s.red_flags.length > 0))) return false;
     if (activeSegment === 'HIGH_CASH' && (s.owner_fcf_yield == null || s.owner_fcf_yield < 0.05)) return false;
     if (activeSegment === 'INSIDER_BUY' && !['CLUSTER BUY', 'CEO/CFO BUY', 'INSIDER BUY'].includes(s.insider_signal)) return false;
-    if (activeSegment === 'PINNED_ONLY' && !isTickerPinned(s.ticker)) return false;
     return true;
   });
 
@@ -4273,19 +4225,6 @@ function render() {
           </div>
           <button class="btn-primary" onclick="auditSingleTicker('${searchTerm}')"><span class="pulse-dot"></span>Run Live Audit on ${searchTerm}</button>
         </div>`;
-    return;
-  }
-
-  if (activeSegment === 'PINNED_ONLY' && filtered.length === 0) {
-    dashboard.innerHTML = `
-      <div class="verdict-panel v-mid" style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:8px;">
-        <div>
-          <div class="verdict-headline">Your Browser-Local "My Pinned" List Is Empty</div>
-          <div class="verdict-body">Click the <strong>&#9734; star icon</strong> on any stock card (or inside any stock's dossier modal) to pin companies to your private browser-local list. Pinned stocks are saved privately in your browser and are never overwritten by other visitors.</div>
-        </div>
-        <button class="btn-secondary" onclick="setSegment('ALL')">Show All Universe</button>
-      </div>
-    `;
     return;
   }
 
