@@ -461,7 +461,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     .container {
       max-width: 1580px;
       margin: 0 auto;
-      padding: 24px 32px 64px;
+      padding: 24px 32px 88px;
     }
 
     /* BENCHMARK TRACKER BAR */
@@ -2233,35 +2233,40 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     <!-- UNIVERSE OUTPUT -->
     <div id="dashboard"></div>
 
-    <!-- INSTITUTIONAL FOOTER (LEGAL DISCLAIMER, PRIVACY, COOKIES & AD PARTNERSHIPS) -->
-    <footer style="margin-top:56px;padding-top:24px;border-top:1px solid var(--border-dim);color:var(--text-muted);font-size:12px;line-height:1.6;">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:14px;">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <strong style="color:var(--text-primary);font-size:13.5px;letter-spacing:-0.02em;">DaTracker</strong>
-          <span style="color:var(--border-strong);">|</span>
-          <span style="color:var(--text-secondary);">Your Automated Financial Analyst for Smarter Investments (<span style="font-family:var(--font-mono);">datracker.net</span>)</span>
-        </div>
-        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-family:var(--font-mono);font-size:11.5px;">
-          <a href="javascript:void(0)" onclick="openLegalModal('advertise')" style="color:var(--green-text);text-decoration:none;font-weight:600;">Advertise / Partner With Us</a>
-          <a href="javascript:void(0)" onclick="openInfoModal()" style="color:var(--text-secondary);text-decoration:none;">Methodology</a>
-          <a href="javascript:void(0)" onclick="openLegalModal('disclaimer')" style="color:var(--text-secondary);text-decoration:none;">Financial Disclaimer</a>
-          <a href="javascript:void(0)" onclick="openLegalModal('privacy')" style="color:var(--text-secondary);text-decoration:none;">Privacy &amp; Cookie Policy</a>
-          <a href="javascript:void(0)" onclick="openLegalModal('terms')" style="color:var(--text-secondary);text-decoration:none;">Terms of Use</a>
-          <a href="javascript:void(0)" onclick="reopenCookieBanner()" style="color:var(--text-muted);text-decoration:none;">Cookie Settings</a>
-        </div>
-      </div>
+    <!-- SCROLL-DOWN FOOTER DETAILS (REGULATORY DISCLAIMER, COPYRIGHT & DATA SOURCES) -->
+    <footer style="margin-top:48px;padding-top:24px;border-top:1px solid var(--border-dim);color:var(--text-muted);font-size:12px;line-height:1.6;">
       <div style="background:rgba(12,16,24,0.65);border:1px solid var(--border-dim);border-radius:8px;padding:12px 16px;font-size:11.5px;color:var(--text-muted);">
         <strong style="color:var(--text-secondary);">Regulatory &amp; Investment Disclaimer:</strong> DaTracker (<span style="font-family:var(--font-mono);">datracker.net</span>) is an automated financial data and quantitative research platform provided strictly for informational and educational purposes. DaTracker is <strong>not</strong> a registered investment advisor, broker-dealer, or financial planner. Nothing on this website — including composite scores, tier classifications ("Selected Portfolio Basket", "High-Conviction Buy"), Reverse DCF valuations, or SEC filing summaries — constitutes personalized investment advice or a recommendation to buy, sell, or hold any security. Past performance does not guarantee future results. Always conduct your own independent due diligence or consult a certified financial professional before making investment decisions.
       </div>
       <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">
         <span>&copy; 2026 DaTracker (datracker.net). All rights reserved.</span>
-        <span>Data sourced from audited SEC EDGAR 10-K/10-Q filings, OpenInsider Form 4 ledgers &amp; market feeds.</span>
+        <span>Data acquired from: <a href="https://finance.yahoo.com" target="_blank" rel="noopener" style="color:var(--text-secondary);text-decoration:underline;">Yahoo Finance</a>, <a href="https://www.sec.gov/edgar" target="_blank" rel="noopener" style="color:var(--text-secondary);text-decoration:underline;">SEC EDGAR</a>, <a href="http://openinsider.com" target="_blank" rel="noopener" style="color:var(--text-secondary);text-decoration:underline;">OpenInsider</a>, <a href="https://finviz.com" target="_blank" rel="noopener" style="color:var(--text-secondary);text-decoration:underline;">Finviz</a>, <a href="https://www.tradingview.com" target="_blank" rel="noopener" style="color:var(--text-secondary);text-decoration:underline;">TradingView</a> &amp; <a href="https://en.wikipedia.org/wiki/List_of_S%26P_500_companies" target="_blank" rel="noopener" style="color:var(--text-secondary);text-decoration:underline;">Wikipedia</a>.</span>
       </div>
     </footer>
   </main>
 
+  <!-- ALWAYS-VISIBLE FIXED BOTTOM BAR -->
+  <div style="position:fixed;bottom:0;left:0;right:0;z-index:880;background:rgba(9,12,18,0.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border-mid);padding:8px 32px;box-shadow:0 -4px 20px rgba(0,0,0,0.6);">
+    <div style="max-width:1580px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <div style="display:flex;align-items:center;gap:9px;">
+        <div class="brand-logo-wrap" style="width:24px;height:24px;border-radius:6px;">
+          <img src="data:image/png;base64,__LOGO_PNG_B64__" alt="DaTracker Logo" class="brand-logo" style="width:16px;height:16px;">
+        </div>
+        <strong style="color:#ffffff;font-size:13.5px;font-weight:700;letter-spacing:-0.02em;">DaTracker</strong>
+      </div>
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-family:var(--font-mono);font-size:11.5px;">
+        <a href="javascript:void(0)" onclick="openLegalModal('advertise')" style="color:var(--green-text);text-decoration:none;font-weight:600;">Advertise / Partner With Us</a>
+        <a href="javascript:void(0)" onclick="openInfoModal()" style="color:var(--text-secondary);text-decoration:none;">Methodology</a>
+        <a href="javascript:void(0)" onclick="openLegalModal('disclaimer')" style="color:var(--text-secondary);text-decoration:none;">Financial Disclaimer</a>
+        <a href="javascript:void(0)" onclick="openLegalModal('privacy')" style="color:var(--text-secondary);text-decoration:none;">Privacy &amp; Cookie Policy</a>
+        <a href="javascript:void(0)" onclick="openLegalModal('terms')" style="color:var(--text-secondary);text-decoration:none;">Terms of Use</a>
+        <a href="javascript:void(0)" onclick="reopenCookieBanner()" style="color:var(--text-muted);text-decoration:none;">Cookie Settings</a>
+      </div>
+    </div>
+  </div>
+
   <!-- COOKIE CONSENT BANNER -->
-  <div id="cookie-consent-banner" style="display:none;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:990;max-width:880px;width:calc(100% - 32px);background:rgba(13,17,25,0.97);border:1px solid var(--border-strong);border-radius:12px;padding:16px 20px;box-shadow:0 20px 50px rgba(0,0,0,0.85);backdrop-filter:blur(12px);">
+  <div id="cookie-consent-banner" style="display:none;position:fixed;bottom:52px;left:50%;transform:translateX(-50%);z-index:990;max-width:880px;width:calc(100% - 32px);background:rgba(13,17,25,0.97);border:1px solid var(--border-strong);border-radius:12px;padding:16px 20px;box-shadow:0 20px 50px rgba(0,0,0,0.85);backdrop-filter:blur(12px);">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;">
       <div style="flex:1;min-width:240px;">
         <div style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:4px;">Cookies &amp; Privacy on DaTracker</div>
