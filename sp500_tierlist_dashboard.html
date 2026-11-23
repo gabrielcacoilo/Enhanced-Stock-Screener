@@ -4063,31 +4063,35 @@ function openModal(ticker) {
   const isHeadwind = headwindSectors.includes(s.sector);
   const isLeading = leadingSectors.includes(s.sector);
   const secRegimeBadge = isHeadwind 
-    ? '<span class="sector-tag tag-headwind" style="margin-left:8px;vertical-align:middle;font-size:11px;">Sector Headwind (Outflow/Correction)</span>' 
-    : (isLeading ? '<span class="sector-tag tag-leading" style="margin-left:8px;vertical-align:middle;font-size:11px;">Sector Leading (Relative Strength)</span>' : '');
+    ? '<span class="sector-tag tag-headwind" style="vertical-align:middle;font-size:11px;">Sector Headwind (Outflow/Correction)</span>' 
+    : (isLeading ? '<span class="sector-tag tag-leading" style="vertical-align:middle;font-size:11px;">Sector Leading (Relative Strength)</span>' : '');
 
   document.getElementById('modal-content').innerHTML = `
-    <div class="modal-top" style="flex-direction:column;gap:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;width:100%;gap:16px;flex-wrap:wrap;">
+    <div class="modal-top">
+      <div style="flex:1;min-width:0;">
         <div>
           <span class="modal-ticker">${s.ticker}</span>
-          <span class="modal-company">${s.company} · ${s.sector}${secRegimeBadge}</span>
+          <span class="modal-company">${s.company}</span>
         </div>
-        <div style="display:flex;flex-direction:row;gap:8px;align-items:center;flex-shrink:0;flex-wrap:nowrap;">
-          <button class="btn-secondary" onclick="togglePinTicker('${s.ticker}', event)" style="white-space:nowrap;${isPinned ? 'border-color:#fbbf24;color:#fbbf24;' : ''}">${isPinned ? '&#9733; Pinned' : '&#9734; Pin Stock'}</button>
-          <button class="btn-secondary" onclick="auditSingleTicker('${s.ticker}')" style="white-space:nowrap;">Live Re-Audit</button>
-          <button class="close-btn" onclick="closeModal()" style="white-space:nowrap;">Close [ESC]</button>
+        <div style="margin-top:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="font-size:13.5px;color:var(--text-secondary);font-weight:500;">${s.sector}</span>
+          ${secRegimeBadge}
         </div>
+        <div class="modal-pillars" style="margin-top:10px;">
+          <span>Composite: <strong class="${pCompCls}">${s.composite_score.toFixed(1)} / 100</strong></span>
+          <span>Valuation: <strong class="${pValCls}">${s.val_score.toFixed(1)} / 30</strong></span>
+          <span>Quality: <strong class="${pQualCls}">${s.qual_score.toFixed(1)} / 30</strong></span>
+          <span>Safety: <strong class="${pSafeCls}">${s.safe_score.toFixed(1)} / 20</strong></span>
+          <span>Alignment: <strong class="${pAlnCls}">${s.align_score.toFixed(1)} / 20</strong></span>
+          <span>Last Audited: <strong class="c-prime">${s.last_analyzed || (scanMeta.last_full_scan && scanMeta.last_full_scan.timestamp ? scanMeta.last_full_scan.timestamp : 'Baseline DB')}</strong></span>
+        </div>
+        ${modalSectorBenchRow}
       </div>
-      <div class="modal-pillars" style="margin-top:2px;">
-        <span>Composite: <strong class="${pCompCls}">${s.composite_score.toFixed(1)} / 100</strong></span>
-        <span>Valuation: <strong class="${pValCls}">${s.val_score.toFixed(1)} / 30</strong></span>
-        <span>Quality: <strong class="${pQualCls}">${s.qual_score.toFixed(1)} / 30</strong></span>
-        <span>Safety: <strong class="${pSafeCls}">${s.safe_score.toFixed(1)} / 20</strong></span>
-        <span>Alignment: <strong class="${pAlnCls}">${s.align_score.toFixed(1)} / 20</strong></span>
-        <span>Last Audited: <strong class="c-prime">${s.last_analyzed || (scanMeta.last_full_scan && scanMeta.last_full_scan.timestamp ? scanMeta.last_full_scan.timestamp : 'Baseline DB')}</strong></span>
+      <div style="display:flex;flex-direction:column;gap:7px;align-items:stretch;flex-shrink:0;min-width:126px;">
+        <button class="close-btn" onclick="closeModal()" style="width:100%;text-align:center;justify-content:center;white-space:nowrap;">Close [ESC]</button>
+        <button class="btn-secondary" onclick="togglePinTicker('${s.ticker}', event)" style="width:100%;justify-content:center;white-space:nowrap;${isPinned ? 'border-color:#fbbf24;color:#fbbf24;' : ''}">${isPinned ? '&#9733; Pinned' : '&#9734; Pin Stock'}</button>
+        <button class="btn-secondary" onclick="auditSingleTicker('${s.ticker}')" style="width:100%;justify-content:center;white-space:nowrap;">Live Re-Audit</button>
       </div>
-      ${modalSectorBenchRow}
     </div>
 
     ${researchHTML}
