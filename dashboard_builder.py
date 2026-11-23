@@ -13,6 +13,14 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>DaTracker</title>
+  <meta name="description" content="DaTracker — Your Automated Financial Analyst for Smarter Investments. Multi-year 10-K financial audits, true cash-flow valuation, sector intelligence, and executive insider tracking across 500+ US companies.">
+  <meta property="og:title" content="DaTracker | Your Automated Financial Analyst for Smarter Investments">
+  <meta property="og:description" content="Automated 10-K financial statement audits, Owner FCF valuation, balance-sheet safety checks, sector benchmarks, and C-suite insider tracking.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://datracker.net">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="DaTracker | Your Automated Financial Analyst for Smarter Investments">
+  <meta name="twitter:description" content="Automated 10-K financial statement audits, Owner FCF valuation, balance-sheet safety checks, sector benchmarks, and C-suite insider tracking.">
   <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,__ICON_ICO_B64__">
   <link rel="apple-touch-icon" href="data:image/png;base64,__LOGO_PNG_B64__">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2129,10 +2137,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           </div>
           <div>
             <div class="brand-title">
-              <span class="desktop-title"><strong style="font-weight:700;color:#ffffff;letter-spacing:-0.03em;">DaTracker</strong> <span style="color:var(--border-strong);margin:0 6px;font-weight:300;">|</span> <span style="font-weight:500;color:var(--text-secondary);font-size:14.5px;">Quantitative Valuation &amp; Forensic Terminal</span></span>
+              <span class="desktop-title"><strong style="font-weight:700;color:#ffffff;letter-spacing:-0.03em;">DaTracker</strong> <span style="color:var(--border-strong);margin:0 6px;font-weight:300;">|</span> <span style="font-weight:500;color:var(--text-secondary);font-size:14.5px;">Your Automated Financial Analyst for Smarter Investments</span></span>
               <span class="mobile-title">DaTracker</span>
             </div>
-            <div class="brand-sub">datracker.net  /  4-Year 10-K Audit  /  Owner FCF ex-SBC  /  Piotroski, Altman Z, Beneish M  /  Reverse DCF  /  OpenInsider</div>
           </div>
         </div>
         <div class="header-btn-group mobile-only-actions">
@@ -2225,7 +2232,49 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     <!-- UNIVERSE OUTPUT -->
     <div id="dashboard"></div>
+
+    <!-- INSTITUTIONAL FOOTER (LEGAL DISCLAIMER, PRIVACY, COOKIES & AD PARTNERSHIPS) -->
+    <footer style="margin-top:56px;padding-top:24px;border-top:1px solid var(--border-dim);color:var(--text-muted);font-size:12px;line-height:1.6;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <strong style="color:var(--text-primary);font-size:13.5px;letter-spacing:-0.02em;">DaTracker</strong>
+          <span style="color:var(--border-strong);">|</span>
+          <span style="color:var(--text-secondary);">Your Automated Financial Analyst for Smarter Investments (<span style="font-family:var(--font-mono);">datracker.net</span>)</span>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-family:var(--font-mono);font-size:11.5px;">
+          <a href="javascript:void(0)" onclick="openLegalModal('advertise')" style="color:var(--green-text);text-decoration:none;font-weight:600;">Advertise / Partner With Us</a>
+          <a href="javascript:void(0)" onclick="openInfoModal()" style="color:var(--text-secondary);text-decoration:none;">Methodology</a>
+          <a href="javascript:void(0)" onclick="openLegalModal('disclaimer')" style="color:var(--text-secondary);text-decoration:none;">Financial Disclaimer</a>
+          <a href="javascript:void(0)" onclick="openLegalModal('privacy')" style="color:var(--text-secondary);text-decoration:none;">Privacy &amp; Cookie Policy</a>
+          <a href="javascript:void(0)" onclick="openLegalModal('terms')" style="color:var(--text-secondary);text-decoration:none;">Terms of Use</a>
+          <a href="javascript:void(0)" onclick="reopenCookieBanner()" style="color:var(--text-muted);text-decoration:none;">Cookie Settings</a>
+        </div>
+      </div>
+      <div style="background:rgba(12,16,24,0.65);border:1px solid var(--border-dim);border-radius:8px;padding:12px 16px;font-size:11.5px;color:var(--text-muted);">
+        <strong style="color:var(--text-secondary);">Regulatory &amp; Investment Disclaimer:</strong> DaTracker (<span style="font-family:var(--font-mono);">datracker.net</span>) is an automated financial data and quantitative research platform provided strictly for informational and educational purposes. DaTracker is <strong>not</strong> a registered investment advisor, broker-dealer, or financial planner. Nothing on this website — including composite scores, tier classifications ("Selected Portfolio Basket", "High-Conviction Buy"), Reverse DCF valuations, or SEC filing summaries — constitutes personalized investment advice or a recommendation to buy, sell, or hold any security. Past performance does not guarantee future results. Always conduct your own independent due diligence or consult a certified financial professional before making investment decisions.
+      </div>
+      <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">
+        <span>&copy; 2026 DaTracker (datracker.net). All rights reserved.</span>
+        <span>Data sourced from audited SEC EDGAR 10-K/10-Q filings, OpenInsider Form 4 ledgers &amp; market feeds.</span>
+      </div>
+    </footer>
   </main>
+
+  <!-- COOKIE CONSENT BANNER -->
+  <div id="cookie-consent-banner" style="display:none;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:990;max-width:880px;width:calc(100% - 32px);background:rgba(13,17,25,0.97);border:1px solid var(--border-strong);border-radius:12px;padding:16px 20px;box-shadow:0 20px 50px rgba(0,0,0,0.85);backdrop-filter:blur(12px);">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:240px;">
+        <div style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:4px;">Cookies &amp; Privacy on DaTracker</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;">
+          We use essential local storage to save your screening preferences and optional analytics/advertising cookies to support free access to DaTracker and measure site performance. Read our <a href="javascript:void(0)" onclick="openLegalModal('privacy')" style="color:var(--blue-text);text-decoration:underline;">Privacy &amp; Cookie Policy</a> for details.
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;flex-wrap:wrap;">
+        <button class="btn-secondary" onclick="setCookieConsent('essential')" style="padding:7px 13px;font-size:11.5px;">Essential Only</button>
+        <button class="btn-primary" onclick="setCookieConsent('all')" style="padding:7px 15px;font-size:11.5px;">Accept All Cookies</button>
+      </div>
+    </div>
+  </div>
 
   <!-- RESEARCH DOSSIER / INFO / SCANNER MODAL -->
   <div class="modal-backdrop" id="modal-backdrop" onclick="if(event.target===this)closeModal()">
@@ -4246,8 +4295,153 @@ function render() {
   });
 }
 
+function initCookieBanner() {
+  try {
+    if (window.localStorage) {
+      const choice = localStorage.getItem('datracker_cookie_consent');
+      if (!choice) {
+        const b = document.getElementById('cookie-consent-banner');
+        if (b) b.style.display = 'block';
+      }
+    }
+  } catch (e) {}
+}
+
+function setCookieConsent(level) {
+  try {
+    if (window.localStorage) {
+      localStorage.setItem('datracker_cookie_consent', JSON.stringify({
+        level: level,
+        timestamp: new Date().toISOString()
+      }));
+    }
+  } catch (e) {}
+  const b = document.getElementById('cookie-consent-banner');
+  if (b) b.style.display = 'none';
+}
+
+function reopenCookieBanner() {
+  const b = document.getElementById('cookie-consent-banner');
+  if (b) b.style.display = 'block';
+}
+
+function openLegalModal(tab) {
+  const activeTab = tab || 'disclaimer';
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-top">
+      <div>
+        <div>
+          <span class="modal-ticker">DaTracker — Legal, Privacy &amp; Ad Partnerships</span>
+        </div>
+        <div class="modal-pillars">
+          <span>datracker.net</span>
+          <span>Regulatory Disclosure</span>
+          <span>GDPR / CCPA Cookie Compliance</span>
+          <span>Sponsorship &amp; Ad Inquiries</span>
+        </div>
+      </div>
+      <button class="close-btn" onclick="closeModal()">Close [ESC]</button>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
+      <button class="${activeTab === 'advertise' ? 'btn-primary' : 'btn-secondary'}" onclick="openLegalModal('advertise')">Advertise / Partner With Us</button>
+      <button class="${activeTab === 'disclaimer' ? 'btn-primary' : 'btn-secondary'}" onclick="openLegalModal('disclaimer')">Financial Disclaimer</button>
+      <button class="${activeTab === 'privacy' ? 'btn-primary' : 'btn-secondary'}" onclick="openLegalModal('privacy')">Privacy &amp; Cookie Policy</button>
+      <button class="${activeTab === 'terms' ? 'btn-primary' : 'btn-secondary'}" onclick="openLegalModal('terms')">Terms of Use</button>
+    </div>
+
+    ${activeTab === 'advertise' ? `
+      <div class="verdict-panel v-green">
+        <div class="verdict-headline">Partner or Advertise on DaTracker (datracker.net)</div>
+        <div class="verdict-body">
+          <strong>Reach active stock researchers, fundamental investors, and quantitative traders.</strong> DaTracker provides multi-year SEC 10-K financial statement audits, Reverse DCF valuations, sector momentum intelligence, and real-time C-suite insider transaction tracking across 500+ US companies.
+        </div>
+      </div>
+      <div class="m-section">
+        <div class="m-heading">Available Partnership &amp; Sponsorship Formats</div>
+        <ul class="clean-list">
+          <li><span><strong class="c-prime">1. Masthead / Dashboard Sponsor Banner:</strong> High-visibility native placement above the Sector Intelligence or Portfolio Basket sections.</span></li>
+          <li><span><strong class="c-prime">2. Stock Dossier &amp; Chart Integration Partner:</strong> Direct brokerage, charting, or research tool call-to-action inside individual stock forensic modals.</span></li>
+          <li><span><strong class="c-prime">3. Featured Fintech / Research Partnership:</strong> Co-branded sector reports, API data partnerships, or financial tool integrations.</span></li>
+        </ul>
+      </div>
+      <div class="verdict-panel v-mid">
+        <div class="verdict-headline">Get in Touch for Ad Rates &amp; Media Kit</div>
+        <div class="verdict-body">
+          For sponsorship availability, custom integrations, or advertising inquiries on <strong>datracker.net</strong>, contact us directly at:<br><br>
+          <a href="mailto:contact@datracker.net?subject=DaTracker%20Advertising%20%2F%20Partnership%20Inquiry" class="btn-primary" style="text-decoration:none;display:inline-flex;margin-top:4px;">Email: contact@datracker.net</a>
+        </div>
+      </div>
+    ` : ''}
+
+    ${activeTab === 'disclaimer' ? `
+      <div class="verdict-panel v-amber">
+        <div class="verdict-headline">Important Financial &amp; Regulatory Disclaimer — Not Investment Advice</div>
+        <div class="verdict-body">
+          DaTracker (<strong>datracker.net</strong>) is an independent automated financial data aggregation and quantitative analysis software tool. <strong>DaTracker is NOT a registered investment advisor, broker-dealer, financial analyst, or fiduciary</strong> under the U.S. Securities and Exchange Commission (SEC) or any other financial regulatory authority.
+        </div>
+      </div>
+      <div class="m-section">
+        <div class="m-heading">Terms of Informational &amp; Educational Use</div>
+        <ul class="clean-list">
+          <li><span><strong class="c-prime">No Personalized Financial Advice:</strong> All content, quantitative scores, tier rankings (including "Tier S — Selected Portfolio Basket", "High-Conviction Buy", and target weight allocations), Reverse DCF fair-value estimates, and SEC EDGAR summaries are generated algorithmically from historical public filings for informational and educational purposes only.</span></li>
+          <li><span><strong class="c-prime">No Solicitation or Recommendation:</strong> Nothing on DaTracker constitutes a solicitation, recommendation, endorsement, or offer to buy or sell any security or financial instrument.</span></li>
+          <li><span><strong class="c-prime">Data Accuracy &amp; Third-Party Feeds:</strong> Financial statement figures are parsed automatically from public SEC EDGAR 10-K/10-Q filings, OpenInsider Form 4 ledgers, and Yahoo Finance feeds. While we strive for forensic accuracy, automated parsing errors, restatements, or data delays can occur. Do not rely solely on automated metrics for trading decisions.</span></li>
+          <li><span><strong class="c-prime">Investment Risk:</strong> Equity investing involves substantial risk of loss. Past fundamental or price performance is never a guarantee of future returns. Always verify primary SEC filings and consult a licensed financial advisor before investing.</span></li>
+        </ul>
+      </div>
+    ` : ''}
+
+    ${activeTab === 'privacy' ? `
+      <div class="verdict-panel v-mid">
+        <div class="verdict-headline">Privacy &amp; Cookie Policy (GDPR / CCPA Compliant)</div>
+        <div class="verdict-body">
+          DaTracker (<strong>datracker.net</strong>) respects your privacy. You can use our entire financial analysis platform without creating an account or submitting personal identification.
+        </div>
+      </div>
+      <div class="m-section">
+        <div class="m-heading">1. Local Browser Storage &amp; Cookies We Use</div>
+        <ul class="clean-list">
+          <li><span><strong class="c-prime">Essential Storage (Strictly Necessary):</strong> We use your browser's local storage (<code style="font-family:var(--font-mono);">localStorage</code>) to store your cookie consent preference and cache recent scan timestamp metadata for fast page loading.</span></li>
+          <li><span><strong class="c-prime">Analytics &amp; Performance Cookies (Optional):</strong> When accepted, we may use standard anonymized analytics cookies to measure aggregate traffic, popular stock searches, and page performance.</span></li>
+          <li><span><strong class="c-prime">Advertising &amp; Sponsor Cookies (Optional):</strong> Third-party advertising partners or ad networks (such as Google AdSense or financial display partners) may use cookies or web beacons to serve relevant financial advertisements and measure campaign effectiveness.</span></li>
+        </ul>
+      </div>
+      <div class="m-section">
+        <div class="m-heading">2. Managing Your Cookie Preferences</div>
+        <div class="verdict-body" style="margin-bottom:12px;">
+          You can update or revoke your cookie consent at any time using the buttons below or via the "Cookie Settings" link in the website footer:
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="setCookieConsent('essential');closeModal();">Use Essential Cookies Only</button>
+          <button class="btn-primary" onclick="setCookieConsent('all');closeModal();">Accept All Cookies</button>
+        </div>
+      </div>
+    ` : ''}
+
+    ${activeTab === 'terms' ? `
+      <div class="verdict-panel v-mid">
+        <div class="verdict-headline">Terms of Use — DaTracker (datracker.net)</div>
+        <div class="verdict-body">
+          By accessing and using DaTracker (<strong>datracker.net</strong>), you agree to be bound by these Terms of Use and our Financial Disclaimer.
+        </div>
+      </div>
+      <div class="m-section">
+        <div class="m-heading">Usage &amp; Liability Terms</div>
+        <ul class="clean-list">
+          <li><span><strong class="c-prime">1. Permitted Use:</strong> DaTracker grants you a personal, non-exclusive, revocable license to access and use the platform for personal financial research and educational analysis. Automated scraping, denial-of-service floods against the live scanner API, or unauthorized commercial redistribution of the compiled database is prohibited.</span></li>
+          <li><span><strong class="c-prime">2. "As-Is" Warranty Disclaimer:</strong> The platform and all financial data are provided strictly "AS IS" and "AS AVAILABLE" without warranties of any kind, whether express or implied, including implied warranties of merchantability, fitness for a particular purpose, or data completeness.</span></li>
+          <li><span><strong class="c-prime">3. Limitation of Liability:</strong> Under no circumstances shall DaTracker, its creator, or its data/advertising partners be liable for any direct, indirect, incidental, or consequential financial losses or trading damages resulting from the use of, or inability to use, information presented on this website.</span></li>
+        </ul>
+      </div>
+    ` : ''}
+  `;
+  document.getElementById('modal-backdrop').style.display = 'flex';
+}
+
 renderTracker();
 render();
+initCookieBanner();
 </script>
 </body>
 </html>"""
